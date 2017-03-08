@@ -10,7 +10,8 @@ import Tags from './components/Tags'
 import Series from './components/Series'
 import TitleDetail from './components/TitleDetail'
 import NotFound from './components/NotFound'
-import Navbar2 from './components/Navbar2'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 import {Locs} from './l10n'
 
@@ -33,7 +34,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Navbar2 setPageTitle={this.setPageTitle}/>
+          <Header/>
           <Switch>         
             <Route exact={true} path="/" component={Home}/>
             <Route path="/titles/:id" component={TitleDetail}/>
@@ -43,6 +44,7 @@ class App extends Component {
             <Route path="/series" component={Series}/>
             <Route component={NotFound}/>
           </Switch>
+          <Footer/>
         </div>
       </Router>
     )
