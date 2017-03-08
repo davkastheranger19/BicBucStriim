@@ -4,10 +4,16 @@ import {Locs} from '../l10n'
 
 
 class Authors extends React.Component {
+
+	constructor() {
+		super();
+		this.locs = Locs();
+	}
+
 	render() {    
 		return (
         	<div>
-  				<PageHeader>Authors</PageHeader>		
+  				<PageHeader>{this.locs.authors}</PageHeader>		
          	</div>
 		)
 	}

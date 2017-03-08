@@ -4,10 +4,16 @@ import {Locs} from '../l10n'
 
 
 class Series extends React.Component {
+
+	constructor() {
+		super();
+		this.locs = Locs();
+	}
+
 	render() {    
 		return (
         	<div>
-  				<PageHeader>Series</PageHeader>		
+  				<PageHeader>{this.locs.series}</PageHeader>		
          	</div>
 		)
 	}

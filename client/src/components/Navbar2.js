@@ -43,18 +43,22 @@ class Navbar2 extends React.Component {
           <Navbar.Collapse>
             <Navbar.Form pullLeft>
               <FormGroup>
-                <FormControl type="text" placeholder="Search" />
+                <FormControl type="text" placeholder={this.locs.pagination_search_ph} />
               </FormGroup>
               {' '}
-              <Button type="submit">Submit</Button>
-          </Navbar.Form>
-			    <Nav activeKey={this.state.selectedIndex} onSelect={this.select}>
-			      <NavItem eventKey={0} href="#">{this.locs.home}</NavItem>
-			      <NavItem eventKey={1} href="#">{this.locs.titles}</NavItem>
-			      <NavItem eventKey={2} href="#">{this.locs.authors}</NavItem>
-			      <NavItem eventKey={3} href="#">{this.locs.tags}</NavItem>
-			      <NavItem eventKey={4} href="#">{this.locs.series}</NavItem>
-			    </Nav>
+              <Button type="submit">{this.locs.pagination_search}</Button>
+            </Navbar.Form>
+  			    <Nav activeKey={this.state.selectedIndex} onSelect={this.select}>
+  			      <NavItem eventKey={0} href="#">{this.locs.home}</NavItem>
+  			      <NavItem eventKey={1} href="#">{this.locs.titles}</NavItem>
+  			      <NavItem eventKey={2} href="#">{this.locs.authors}</NavItem>
+  			      <NavItem eventKey={3} href="#">{this.locs.tags}</NavItem>
+  			      <NavItem eventKey={4} href="#">{this.locs.series}</NavItem>
+  			    </Nav>
+            <Nav pullRight>
+              <NavItem eventKey={100} href="#">{this.locs.admin_short}</NavItem>
+              <NavItem eventKey={101} href="#">{this.locs.logout}</NavItem>
+            </Nav>  
           </Navbar.Collapse>
 			 </Navbar>
 		)

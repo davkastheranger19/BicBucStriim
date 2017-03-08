@@ -4,10 +4,16 @@ import {Locs} from '../l10n'
 
 
 class Tags extends React.Component {
+
+	constructor() {
+		super();
+		this.locs = Locs();
+	}
+
 	render() {    
 		return (
         	<div>
-  				<PageHeader>Tags</PageHeader>		
+  				<PageHeader>{this.locs.tags}</PageHeader>		
          	</div>
 		)
 	}

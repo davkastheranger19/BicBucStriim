@@ -67,7 +67,7 @@ class Home extends React.Component {
 	render() {
 		return (
 			<div>
-				<PageHeader>{this.locs.most_recent}</PageHeader>
+				<PageHeader>{this.locs.dl30}</PageHeader>
         <TilesGrid titleData={tilesData} />
 			</div>
 		)

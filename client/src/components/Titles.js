@@ -5,10 +5,15 @@ import {Locs} from '../l10n'
 
 class Titles extends React.Component {
 
+	constructor() {
+		super();
+		this.locs = Locs();
+	}
+
 	render() {    
 		return (
         	<div>
-  				<PageHeader>Titles</PageHeader>		
+  				<PageHeader>{this.locs.titles}</PageHeader>		
         		<p>{window.navigator.userAgent}</p>
          	</div>
 		)
