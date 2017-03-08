@@ -12,3 +12,4 @@ composer.phar
 .idea
 *.iml
 node_modules
+build
