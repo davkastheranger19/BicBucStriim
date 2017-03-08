@@ -1,0 +1,61 @@
+[2017-03-08 17:35:25] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"7dab816"}
+[2017-03-08 17:36:24] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"8251ec1"}
+[2017-03-08 17:36:41] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"5c63025"}
+[2017-03-08 17:37:43] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"fdcd389"}
+[2017-03-08 17:37:55] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"84fef1c"}
+[2017-03-08 17:38:15] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"a43acea"}
+[2017-03-08 17:38:43] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"cdc10d1"}
+[2017-03-08 17:39:00] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"c8f520c"}
+[2017-03-08 17:40:12] slim-app.INFO: Slim-Skeleton '/' route [] {"uid":"f934e2e"}
+[2017-03-08 18:03:27] slim-app.INFO: dbok?  [] {"uid":"63bd806"}
+[2017-03-08 18:05:12] slim-app.INFO: dbok?  [] {"uid":"41a17ff"}
+[2017-03-08 18:09:01] slim-app.INFO: dbok?  [] {"uid":"61de57c"}
+[2017-03-08 18:30:43] slim-app.INFO: dbok? 1 [] {"uid":"5d6bf58"}
+[2017-03-08 18:32:13] slim-app.INFO: dbok?  [] {"uid":"29be05c"}
+[2017-03-08 18:34:23] slim-app.INFO: dbok? 1 [] {"uid":"68f7805"}
+[2017-03-08 18:35:26] slim-app.INFO: dbok? 1 [] {"uid":"6d3a96c"}
+[2017-03-08 19:42:28] BicBucStriim.INFO: Test [] {"uid":"6a0cb66"}
+[2017-03-08 19:42:28] BicBucStriim.INFO: dbok? 1 [] {"uid":"6a0cb66"}
+[2017-03-08 21:03:18] BicBucStriim.WARNING: Unknown configuration, name: own_config_middleware: db_versionown_config_middleware: , value: own_config_middleware: 3 [] {"uid":"408123a"}
+[2017-03-08 21:03:18] BicBucStriim.WARNING: own_config_middleware: old db schema detected. please update [] {"uid":"408123a"}
+[2017-03-08 21:04:49] BicBucStriim.WARNING: Unknown configuration, name: own_config_middleware: db_versionown_config_middleware: , value: own_config_middleware: 3 [] {"uid":"495628c"}
+[2017-03-08 21:04:49] BicBucStriim.WARNING: own_config_middleware: different db schema detected. please check [] {"uid":"495628c"}
+[2017-03-08 21:08:13] BicBucStriim.WARNING: Unknown configuration, name: own_config_middleware: db_versionown_config_middleware: , value: own_config_middleware: 3 [] {"uid":"e666a2d"}
+[2017-03-08 21:08:13] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be {DB_SCHEMA_VERSION}, is . please check [] {"uid":"e666a2d"}
+[2017-03-08 21:10:30] BicBucStriim.WARNING: Unknown configuration, name: own_config_middleware: db_versionown_config_middleware: , value: own_config_middleware: 3 [] {"uid":"2856475"}
+[2017-03-08 21:10:30] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be 3, is . please check [] {"uid":"2856475"}
+[2017-03-08 21:12:44] BicBucStriim.WARNING: Unknown configuration, name: own_config_middleware: db_versionown_config_middleware: , value: own_config_middleware: 3 [] {"uid":"5642c88"}
+[2017-03-08 21:12:44] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be 3, is . please check [] {"uid":"5642c88"}
+[2017-03-08 21:14:42] BicBucStriim.WARNING: own_config_middleware: unknown configuration, name: db_version, value: 3 [] {"uid":"d8626fe"}
+[2017-03-08 21:14:42] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be 3, is . please check [] {"uid":"d8626fe"}
+[2017-03-08 21:16:56] BicBucStriim.DEBUG:  [] {"uid":"a3a6147"}
+[2017-03-08 21:16:56] BicBucStriim.WARNING: own_config_middleware: unknown configuration, name: db_version, value: 3 [] {"uid":"a3a6147"}
+[2017-03-08 21:16:56] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be 3, is . please check [] {"uid":"a3a6147"}
+[2017-03-08 21:19:34] BicBucStriim.DEBUG:  [] {"uid":"4411cb6"}
+[2017-03-08 21:19:34] BicBucStriim.WARNING: own_config_middleware: unknown configuration, name: db_version, value: 3 [] {"uid":"4411cb6"}
+[2017-03-08 21:19:34] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be 3, is . please check [] {"uid":"4411cb6"}
+[2017-03-08 21:24:54] BicBucStriim.DEBUG:  [] {"uid":"3c21e49"}
+[2017-03-08 21:24:54] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"3c21e49"}
+[2017-03-08 21:24:54] BicBucStriim.WARNING: own_config_middleware: different db schema detected, should be DB_SCHEMA_VERSION, is . please check [] {"uid":"3c21e49"}
+[2017-03-08 21:25:34] BicBucStriim.DEBUG:  [] {"uid":"ac65b09"}
+[2017-03-08 21:25:34] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"ac65b09"}
+[2017-03-08 21:25:34] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"ac65b09"}
+[2017-03-08 21:25:34] BicBucStriim.INFO: dbok? 1 [] {"uid":"ac65b09"}
+[2017-03-08 21:27:53] BicBucStriim.DEBUG:  [] {"uid":"3315ed7"}
+[2017-03-08 21:27:53] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"3315ed7"}
+[2017-03-08 21:27:53] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"3315ed7"}
+[2017-03-08 21:27:53] BicBucStriim.INFO: dbok? 1 [] {"uid":"3315ed7"}
+[2017-03-08 21:28:22] BicBucStriim.DEBUG:  [] {"uid":"c41f021"}
+[2017-03-08 21:28:22] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"c41f021"}
+[2017-03-08 21:28:22] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"c41f021"}
+[2017-03-08 21:28:22] BicBucStriim.INFO: dbok? 1 [] {"uid":"c41f021"}
+[2017-03-08 22:03:40] BicBucStriim.DEBUG:  [] {"uid":"63db4ae"}
+[2017-03-08 22:03:40] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"63db4ae"}
+[2017-03-08 22:03:40] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"63db4ae"}
+[2017-03-08 22:06:46] BicBucStriim.DEBUG:  [] {"uid":"2f34830"}
+[2017-03-08 22:06:46] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"2f34830"}
+[2017-03-08 22:06:46] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"2f34830"}
+[2017-03-08 22:12:10] BicBucStriim.DEBUG:  [] {"uid":"f0e9589"}
+[2017-03-08 22:12:10] BicBucStriim.DEBUG: own_config_middleware: configuring value 3 for db_version [] {"uid":"f0e9589"}
+[2017-03-08 22:12:10] BicBucStriim.DEBUG: own_config_middleware: config loaded [] {"uid":"f0e9589"}
+[2017-03-08 22:12:10] BicBucStriim.WARNING: calibre_config_mw: Calibre library path not configured. [] {"uid":"f0e9589"}
