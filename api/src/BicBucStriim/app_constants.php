@@ -59,9 +59,14 @@ class AppConstants {
 
     /* Error codes */
 
-    const ERROR_BAD_DB = 1;
-    const ERROR_BAD_SCHEMA_VERSION = 2;
-    const ERROR_NO_CALIBRE_PATH = 3;
-    const ERROR_BAD_CALIBRE_DB = 4;
+    const ERROR_BAD_DB = 1; # data.db no access
+    const ERROR_BAD_SCHEMA_VERSION = 2; # data.db schema version incorrect
+    const ERROR_NO_CALIBRE_PATH = 3; # Calibre library path empty
+    const ERROR_BAD_CALIBRE_DB = 4; # Calibre library no access
+    const ERROR_BAD_JSON = 5; # JSON input can't be decoded
+    const ERROR_UNKNOWN_CONFIG = 6; # Unknown configuration key found
+    const ERROR_BAD_INPUT = 7;
+    const ERROR_BAD_KINDLEFROM = 8; # No or bad kindle FROM email address
+    const ERROR_BAD_PAGESIZE = 9; # page size out of bounds
 }
 ?>

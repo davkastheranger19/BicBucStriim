@@ -10,8 +10,6 @@
 
 namespace BicBucStriim;
 
-use BicBucStriim\DataConstants;
-use BicBucStriim\Model_CalibreThing;
 use PDO;
 use RedBeanPHP\R;
 
@@ -64,7 +62,9 @@ class BicBucStriim {
 			$this->mydb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->mydb->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 			$this->last_error = $this->mydb->errorCode();
-			R::setup('sqlite:'.$rp);
+            if (!R::hasDatabase('default')) {
+                R::setup('sqlite:'.$rp);
+            }
 			R::freeze($freeze);
 		} else {
 			$this->mydb = NULL;
@@ -76,7 +76,7 @@ class BicBucStriim {
 	 * @param string $dataPath Path to BBS DB
 	 */
 	public function createDataDb($dataPath='data/data.db') {
-		$schema = file($this->data_dir.'/schema.sql');
+        $schema = file($this->data_dir.'/schema.sql');
 		$this->mydb = new PDO('sqlite:'.$dataPath, NULL, NULL, array());
 		$this->mydb->setAttribute(1002, 'SET NAMES utf8');
 		$this->mydb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

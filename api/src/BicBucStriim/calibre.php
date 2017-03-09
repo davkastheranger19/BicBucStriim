@@ -11,7 +11,6 @@ namespace BicBucStriim;
 
 require_once 'utilities.php';
 
-use CalibreFilter;
 use \PDO;
 
 class Calibre

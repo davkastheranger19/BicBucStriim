@@ -8,6 +8,8 @@
  * 
  */ 
 
+namespace BicBucStriim;
+
 class CalibreFilter {
 	/**
 	 * @var string Calibre language ID
