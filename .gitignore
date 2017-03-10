@@ -4,8 +4,7 @@
 pkg
 *.sublime-project
 *.sublime-workspace
-tests/work
-tests/data
+api/tests/work
 .vagrant*
 screenshot*
 composer.phar
@@ -14,4 +13,5 @@ composer.phar
 node_modules
 build
 api/vendor
-api/log
+api/logs
+

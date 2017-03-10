@@ -15,7 +15,7 @@ return [
         ],
         // BicBucStriim settings
         'bbs' => [
-            'dataDb' => __DIR__ . '/../public/data/data.db',
+            'dataDb' => __DIR__ . '/../data/data.db',
         ],
     ],
 ];

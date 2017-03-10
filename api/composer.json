@@ -27,7 +27,19 @@
     "process-timeout" : 0
   },
   "scripts": {
-    "start": "php -S 0.0.0.0:8080 -t public public/index.php",
+    "prep-work": [
+      "rm -rf tests/work",
+      "mkdir tests/work",
+      "cp -r data tests/work",
+      "cp -r public tests/work",
+      "cp -r src tests/work",
+      "cp -r vendor tests/work"
+    ],
+    "start": [
+      "@prep-work",
+      "docker-compose start"
+    ],
+    "stop": "docker-compose stop",
     "test": "phpunit"
   }
 }
