@@ -33,7 +33,13 @@
       "cp -r data tests/work",
       "cp -r public tests/work",
       "cp -r src tests/work",
-      "cp -r vendor tests/work"
+      "cp -r vendor tests/work",
+      "rm -rf tests/worklib",
+      "mkdir tests/worklib",
+      "cp -r tests/fixtures/lib2 tests/worklib"
+    ],
+    "copy-src": [
+      "cp -r src tests/work"
     ],
     "start": [
       "@prep-work",

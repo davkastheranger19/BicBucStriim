@@ -81,7 +81,12 @@ $container['calibre'] = function ($c) {
     $cdir = $c->get('config')[AppConstants::CALIBRE_DIR];
     $logger = $c->get('logger');
     if (!empty($cdir)) {
-        $calibre = new Calibre($cdir);
+        try {
+            $calibre = new Calibre($cdir.'/metadata.db');
+        } catch (PDOException $ex) {
+            $logger->error("Error opening Calibre library: ".var_export($ex, true));
+            return null;
+        }
         if ($calibre->libraryOk()) {
             $logger->debug('Calibre library ok');
         } else {

@@ -87,6 +87,8 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         if ($this->withMiddleware) {
             require __DIR__ . '/../../src/middleware.php';
         }
+        // Route helpers
+        require_once __DIR__ . '/../../src/helpers.php';
 
         // Register routes
         require __DIR__ . '/../../src/routes.php';

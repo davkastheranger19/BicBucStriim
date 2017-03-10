@@ -12,7 +12,7 @@ function getConfig($c) {
     foreach ($sconfig as $sc) {
         $config[$sc->name] = $sc->val;
     }
-    return $sconfig;
+    return $config;
 }
 
 
@@ -47,22 +47,22 @@ function processNewConfig($c, $config, $newConfig, $key, $value) {
             # Switch off Kindle feature, if no valid email address supplied
             if ($value == "1") {
                 if (empty($newConfig[\BicBucStriim\AppConstants::KINDLE_FROM_EMAIL])) {
-                    return \BicBucStriim\AppConstants::ERROR_BAD_KINDLEFROM;
-                } elseif (!isEMailValid($value)) {
+                    return \BicBucStriim\AppConstants::ERROR_NO_KINDLEFROM;
+                } elseif (!isEMailValid($newConfig[\BicBucStriim\AppConstants::KINDLE_FROM_EMAIL])) {
                     return \BicBucStriim\AppConstants::ERROR_BAD_KINDLEFROM;
                 }
             }
             break;
         case \BicBucStriim\AppConstants::THUMB_GEN_CLIPPED:
             ## Check for a change in the thumbnail generation method
-            if ($value != $config[THUMB_GEN_CLIPPED]) {
+            if ($value != $config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]) {
                 # Delete old thumbnails if necessary
                 $c->bbs->clearThumbnails();
             }
             break;
         case \BicBucStriim\AppConstants::PAGE_SIZE:
             ## Check for a change in page size, min 1, max 100
-            if ($value != $config[PAGE_SIZE]) {
+            if ($value != $config[\BicBucStriim\AppConstants::PAGE_SIZE]) {
                 if ($value < 1 || $value > 100) {
                     return \BicBucStriim\AppConstants::ERROR_BAD_PAGESIZE;
                 }
