@@ -12,8 +12,8 @@ class TitlesGrid extends React.Component {
 			<Grid>
 				<Row className="show-grid">
 					{this.props.titleData.map((tile) => (
-						<Link to={`/titles/${tile.id}`}>
-							<Col xs="6" sm="4" md="4" lg="4">
+						<Link key={tile.id} to={`/titles/${tile.id}`}>
+							<Col xs={6} sm={4} md={4} lg={4}>
 							  <Image className="title" src={tile.img}/>
 							  <div className="x0">
 							  	<div className="x1">
