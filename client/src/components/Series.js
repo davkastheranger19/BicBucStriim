@@ -1,20 +1,19 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap'
-import {Locs} from '../l10n'
+import WithDefaults from './WithDefaults'
 
 
 class Series extends React.Component {
 
-	constructor() {
-		super();
-		this.locs = Locs();
-	}
-
 	render() {    
 		return (
-        	<div>
-  				<PageHeader>{this.locs.series}</PageHeader>		
-         	</div>
+			<WithDefaults>
+          	{(locs) => (
+	        	<div>
+	  				<PageHeader>{locs.series}</PageHeader>		
+	         	</div>
+	         )}
+	        </WithDefaults>
 		)
 	}
 

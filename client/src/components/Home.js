@@ -1,8 +1,7 @@
 import React from 'react';
-import {PageHeader, Grid, Row, Col, Image} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {PageHeader} from 'react-bootstrap'
 
-import {Locs} from '../l10n'
+import WithDefaults from './WithDefaults'
 import TilesGrid from './TitlesGrid'
 
 const tilesData = [
@@ -59,17 +58,16 @@ const tilesData = [
 
 class Home extends React.Component {
 
-	constructor() {
-		super();
-		this.locs = Locs();
-	}
-
 	render() {
 		return (
-			<div>
-				<PageHeader>{this.locs.dl30}</PageHeader>
-        <TilesGrid titleData={tilesData} />
-			</div>
+      <WithDefaults>
+        {(locs) => (
+          <div>
+    				<PageHeader>{locs.dl30}</PageHeader>
+            <TilesGrid titleData={tilesData} />
+          </div>
+        )}
+      </WithDefaults>
 		)
 	}
 	

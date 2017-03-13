@@ -1,20 +1,19 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap'
-import {Locs} from '../l10n'
+import WithDefaults from './WithDefaults'
 
 
 class Tags extends React.Component {
 
-	constructor() {
-		super();
-		this.locs = Locs();
-	}
-
 	render() {    
 		return (
-        	<div>
-  				<PageHeader>{this.locs.tags}</PageHeader>		
-         	</div>
+			<WithDefaults>
+			{(locs) => (
+	        	<div>
+	  				<PageHeader>{locs.tags}</PageHeader>		
+	         	</div>
+	         )}
+	  		</WithDefaults>
 		)
 	}
 

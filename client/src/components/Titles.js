@@ -1,21 +1,20 @@
 import React from 'react';
 import {PageHeader} from 'react-bootstrap'
-import {Locs} from '../l10n'
+import WithDefaults from './WithDefaults'
 
 
 class Titles extends React.Component {
 
-	constructor() {
-		super();
-		this.locs = Locs();
-	}
-
 	render() {    
 		return (
-        	<div>
-  				<PageHeader>{this.locs.titles}</PageHeader>		
-        		<p>{window.navigator.userAgent}</p>
-         	</div>
+			<WithDefaults>
+			{(locs) => (
+	        	<div>
+	  				<PageHeader>{locs.titles}</PageHeader>		
+	        		<p>{window.navigator.userAgent}</p>
+	         	</div>
+	         )}
+	  		</WithDefaults>
 		)
 	}
 
