@@ -1,6 +1,13 @@
 <?php
 return [
     'settings' => [
+        // Enable whoops
+        'debug'         => true,
+
+        // Support click to open editor
+        'whoops.editor' => 'sublime',
+
+        // Display call stack in orignal slim error when debug is off
         'displayErrorDetails' => true, // set to false in production
         'addContentLengthHeader' => false, // Allow the web server to send the content-length header
         // Renderer settings

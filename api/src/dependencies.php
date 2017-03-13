@@ -3,11 +3,16 @@ require_once 'BicBucStriim/bicbucstriim.php';
 require_once 'BicBucStriim/calibre.php';
 require_once 'BicBucStriim/app_constants.php';
 require_once 'BicBucStriim/mailer.php';
+require_once 'BicBucStriim/token.php';
+
+use Slim\Middleware\JwtAuthentication;
+use Slim\Middleware\HttpBasicAuthentication;
 
 use BicBucStriim\BicBucStriim;
 use BicBucStriim\Calibre;
 use BicBucStriim\Mailer;
 use BicBucStriim\AppConstants;
+use BicBucStriim\Token;
 
 // DIC configuration
 $container = $app->getContainer();
@@ -99,4 +104,57 @@ $container['calibre'] = function ($c) {
         $calibre = null;
     }
     return $calibre;
+};
+
+use \Slim\Middleware\HttpBasicAuthentication\PdoAuthenticator;
+$container["HttpBasicAuthentication"] = function ($c) {
+    return new HttpBasicAuthentication([
+        'path' => "/token",
+        'relaxed' => ['localhost'],
+        'authenticator' => new PdoAuthenticator([
+            'pdo' => $c->get('bbs')->mydb,
+            'table' => 'user',
+            'user' => 'username',
+            'hash' => 'password'
+        ]),
+        'callback' => function ($request, $response, $arguments) use ($c) {
+            $c['username']=$arguments['user'];
+        }
+    ]);
+};
+
+$container['token'] = function ($container) {
+    return new Token;
+};
+
+$container['user'] = function ($container) {
+    return null;
+};
+
+$container["JwtAuthentication"] = function ($container) {
+    return new JwtAuthentication([
+        "path" => "/",
+        "passthrough" => ["/token", "/info"],
+        // TODO change password secret handling
+        "secret" => "supersecretkeyyoushouldnotcommittogithub",
+        //"secret" => getenv("JWT_SECRET"),
+        "algorithm" => ["HS256"],
+        "logger" => $container["logger"],
+        "relaxed" => ["localhost"],
+        "error" => function ($request, $response, $arguments) {
+            $data['code'] = "error";
+            $data['reason'] = $arguments["message"];
+            return $response
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        },
+        "callback" => function ($request, $response, $arguments) use ($container) {
+            $container["token"]->hydrate($arguments["decoded"]);
+            $token =  $container['token'];
+            if (isset($token) && !is_null($token->getUid())) {
+                $user = $container->bbs->user($token->getUid());
+                $container['user'] = $user;
+            }
+        }
+    ]);
 };

@@ -35,7 +35,7 @@ class CalibreConfigMiddleware {
         $cdir = $this->config[AppConstants::CALIBRE_DIR];
 
         $path = $request->getUri()->getPath();
-        if (substr($path, 0,5) === '/auth' || substr($path, 0,6) === '/admin') {
+        if (substr($path, 0,6) === '/token' || substr($path, 0,5) === '/dump' || substr($path, 0,6) === '/admin') {
             // No Calibre needed in these parts
             return $next($request, $response);
         } else {

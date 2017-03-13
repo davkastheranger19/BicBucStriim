@@ -144,7 +144,8 @@ class BicBucStriim {
 	}
 
 	/**
-	 * Find a specific user in the settings DB
+	 * Find a user by ID in the settings DB
+	 * @param $userid integer user id
 	 * @return user data or NULL if not found
 	 */
 	public function user($userid) {
@@ -155,7 +156,17 @@ class BicBucStriim {
 			return $user;
 	}
 
-	/**
+    /**
+     * Find a user by user name in the settings DB
+     * @param $username string user name
+     * @return user data or NULL if not found
+     */
+    public function userByName($username) {
+        $user = R::findOne('user', ' username = :name', array(':name' => $username));
+		return $user;
+    }
+
+    /**
 	 * Add a new user account. 
 	 * The username must be unique. Name and password must not be empty.
 	 * @param $username string login name for the account, must be unique
@@ -166,7 +177,7 @@ class BicBucStriim {
 	public function addUser($username, $password) {
 		if (empty($username) || empty($password))
 			return null;
-		$other = R::findOne('user', ' name = :name', array(':name' > $username));
+		$other = R::findOne('user', ' username = :name', array(':name' => $username));
 		if (!is_null($other))
 			return null;
 		$mdp = password_hash($password, PASSWORD_BCRYPT);
