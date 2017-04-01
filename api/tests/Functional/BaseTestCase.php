@@ -14,7 +14,7 @@ use RedBeanPHP\R;
  * tuned to the specifics of this skeleton app, so if your needs are
  * different, you'll need to change it.
  */
-class BaseTestCase extends \PHPUnit_Framework_TestCase
+class BaseTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * Use middleware when running application?
@@ -22,6 +22,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @var bool
      */
     protected $withMiddleware = true;
+
+    protected $environment;
+    protected $token;
 
     const CALIBRE = './tests/fixtures/lib2';
     const DB2 = './tests/fixtures/data2.db';
@@ -45,7 +48,30 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Process the application given a request method and URI
+     * Process the application given a request method and URI as an admin user with HTTP Basic Auth
+     *
+     * @param string $requestMethod the request method (e.g. GET, POST, etc.)
+     * @param string $requestUri the request URI
+     * @param array|object|null $requestData the request data
+     * @return \Slim\Http\Response
+     */
+    public function runAppWithAdmin($requestMethod, $requestUri, $requestData = null)
+    {
+        // Create a mock environment for testing with
+        $this->environment = Environment::mock(
+            [
+                'REQUEST_METHOD' => $requestMethod,
+                'REQUEST_URI' => $requestUri,
+                'CONTENT_TYPE' => 'application/json;charset=utf-8',
+                'PHP_AUTH_USER'=> 'admin',
+                'PHP_AUTH_PW' => 'admin',
+            ]
+        );
+        return $this->runAppInt($requestMethod, $requestUri, $requestData);
+    }
+
+    /**
+     * Process the application given a request method and URI with a JWT Auth
      *
      * @param string $requestMethod the request method (e.g. GET, POST, etc.)
      * @param string $requestUri the request URI
@@ -55,15 +81,29 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     public function runApp($requestMethod, $requestUri, $requestData = null)
     {
         // Create a mock environment for testing with
-        $environment = Environment::mock(
+        $this->environment = Environment::mock(
             [
                 'REQUEST_METHOD' => $requestMethod,
                 'REQUEST_URI' => $requestUri,
-                'CONTENT_TYPE' => 'application/json;charset=utf-8'
+                'CONTENT_TYPE' => 'application/json;charset=utf-8',
+                'HTTP_AUTHORIZATION' => 'Bearer '.$this->token
             ]
         );
+        return $this->runAppInt($requestMethod, $requestUri, $requestData);
+    }
+
+    /**
+     * Process the application given a request method and URI
+     *
+     * @param string $requestMethod the request method (e.g. GET, POST, etc.)
+     * @param string $requestUri the request URI
+     * @param array|object|null $requestData the request data
+     * @return \Slim\Http\Response
+     */
+    public function runAppInt($requestMethod, $requestUri, $requestData = null)
+    {
         // Set up a request object based on the environment
-        $request = Request::createFromEnvironment($environment);
+        $request = Request::createFromEnvironment($this->environment);
 
         // Add request data, if it exists
         if (isset($requestData)) {
@@ -91,8 +131,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         require_once __DIR__ . '/../../src/helpers.php';
 
         // Register routes
-        require __DIR__ . '/../../src/admin.php';
-
+        require __DIR__ . '/../../src/routes/auth.php';
+        require __DIR__ . '/../../src/routes/admin.php';
+        require __DIR__ . '/../../src/routes/opds.php';
         // Process the application
         $response = $app->process($request, $response);
 

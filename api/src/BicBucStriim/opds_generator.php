@@ -1,6 +1,12 @@
 <?php
+
+namespace BicBucStriim;
+
 require_once 'utilities.php';
 require_once 'l10n.php';
+
+use \XMLWriter;
+
 /**
  * Generator for OPDS 1.1 Catalogs of BicBucStriim
  */

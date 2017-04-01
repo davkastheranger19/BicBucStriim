@@ -2,9 +2,11 @@
 /**
 * Localization helper 
 */
-require_once 'langs.php';
 
-class L10n extends ArrayObject {
+namespace BicBucStriim;
+
+
+class L10n extends \ArrayObject {
 	/**
 	 * User language
 	 * @var string
@@ -30,6 +32,7 @@ class L10n extends ArrayObject {
 	 */
 	function __construct($lang) {		
 		global $langde, $langen, $langes, $langfr, $langgl, $langhu, $langit, $langnl;
+		include("langs.php");
 		if ($lang == 'de')
 			$this->langa = $langde;
 		elseif ($lang == 'es')

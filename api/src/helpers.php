@@ -15,6 +15,60 @@ function getConfig($c) {
     return $config;
 }
 
+//
+
+
+/**
+ * Initialize the OPDS generator
+ * @param $container
+ * @param $request current request
+ * @return OpdsGenerator
+ */
+function mkOpdsGenerator($container, $request)
+{
+    $root = mkRootUrl($request, (bool)$container->config[\BicBucStriim\AppConstants::RELATIVE_URLS]);
+    $version = $container->settings['bbs']['version'];
+    $cdir = $container->calibre->calibre_dir;
+    $clm = $container->calibre->calibre_last_modified;
+    $gen = new \BicBucStriim\OpdsGenerator($root,
+        $version,
+        $cdir,
+        date(DATE_ATOM, $clm),
+        $container->l10n);
+    return $gen;
+}
+
+
+/**
+ * Create and send the typical OPDS response
+ * @param \Psr\Http\Message\ResponseInterface $response
+ * @param string $content
+ * @param string $type
+ * @return \Psr\Http\Message\ResponseInterface
+ */
+function mkOpdsResponse($response, $content, $type)
+{
+    return $response->withStatus(200)
+            ->withHeader('Content-Type', $type)
+            ->withHeader('Content-Length', strlen($content))
+            ->write($content);
+}
+
+/**
+ * @param \Psr\Http\Message\ServerRequestInterface $request
+ * @param bool $relativeUrls
+ * @return string root URL
+ */
+function mkRootUrl($request, $relativeUrls=true)
+{
+    $uri = $request->getUri();
+    if ($relativeUrls) {
+        $root = rtrim($uri->getPath(), "/");
+    } else {
+        $root = rtrim($uri->getBasePath() . $uri->getPath(), "/");
+    }
+    return $root;
+}
 
 /**
  * Validate and process important configuration changes

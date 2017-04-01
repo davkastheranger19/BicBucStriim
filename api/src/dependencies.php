@@ -4,9 +4,13 @@ require_once 'BicBucStriim/calibre.php';
 require_once 'BicBucStriim/app_constants.php';
 require_once 'BicBucStriim/mailer.php';
 require_once 'BicBucStriim/token.php';
+require_once 'BicBucStriim/opds_generator.php';
+require_once 'BicBucStriim/l10n.php';
 
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\HttpBasicAuthentication;
+use \RKA\Middleware\SchemeAndHost;
+use \Aura\Accept\AcceptFactory;
 
 use BicBucStriim\BicBucStriim;
 use BicBucStriim\Calibre;
@@ -134,7 +138,7 @@ $container['user'] = function ($container) {
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
         "path" => "/",
-        "passthrough" => ["/token", "/info"],
+        "passthrough" => ["/token", "/info", "/opds"],
         // TODO change password secret handling
         "secret" => "supersecretkeyyoushouldnotcommittogithub",
         //"secret" => getenv("JWT_SECRET"),

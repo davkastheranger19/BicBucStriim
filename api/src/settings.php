@@ -23,6 +23,9 @@ return [
         // BicBucStriim settings
         'bbs' => [
             'dataDb' => __DIR__ . '/../data/data.db',
+            // TODO get version from outside
+            'version' => '2.00',
+            'langs' => array('de', 'en', 'es', 'fr', 'gl' , 'hu', 'it', 'nl'),
         ],
     ],
 ];

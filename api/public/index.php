@@ -28,5 +28,6 @@ require __DIR__ . '/../src/helpers.php';
 // Register routes
 require __DIR__ . '/../src/routes/admin.php';
 require __DIR__ . '/../src/routes/auth.php';
+require __DIR__ . '/../src/routes/opds.php';
 // Run app
 $app->run();

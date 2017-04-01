@@ -69,5 +69,6 @@ class AppConstants {
     const ERROR_NO_KINDLEFROM = 8; # No kindle FROM email address
     const ERROR_BAD_KINDLEFROM = 9; # Bad kindle FROM email address
     const ERROR_BAD_PAGESIZE = 10; # page size out of bounds
+    const ERROR_BAD_MEDIATYPE = 11; # wrong media type in accept header
 }
 ?>
