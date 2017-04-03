@@ -1,6 +1,21 @@
 <?php
 
 /**
+ * Check for all books if thumbnails are available
+ * @param array                         $books book records
+ * @param \BicBucStriim\BicBucStriim    $bbs
+ * @return array
+ */
+function checkThumbnailOpds($books, $bbs)
+{
+    $checkThumbnailOpds = function ($record) use ($bbs) {
+        $record['book']->thumbnail = $bbs->isTitleThumbnailAvailable($record['book']->id);
+        return $record;
+    };
+    return array_map($checkThumbnailOpds, $books);
+}
+
+/**
  * Retrieve the current configuration
  *
  * @param $c        Container
@@ -15,14 +30,62 @@ function getConfig($c) {
     return $config;
 }
 
-//
+
+/**
+ * Return a tag/language filter for Calibre according to user data, an empty filter if there is no user
+ * @param $container
+ * @return \BicBucStriim\CalibreFilter
+ */
+function getFilter($container)
+{
+    $lang = null;
+    $tag = null;
+    $user = $container->user;
+    if (isset($user)) {
+        $container->logger->debug('getFilter: ' . var_export($user, true));
+        if (!empty($user['languages']))
+            $lang = $container->calibre->getLanguageId($user->languages);
+        if (!empty($user['tags']))
+            $tag = $container->calibre->getTagId($user->tags);
+        $container->logger->debug('getFilter: Using language ' . $lang . ', tag ' . $tag);
+    }
+    return new \BicBucStriim\CalibreFilter($lang, $tag);
+}
+
+/**
+ * Calcluate the next page number for search results
+ * @param  array $tl search result
+ * @return int       page index or NULL
+ */
+function getNextSearchPage($tl)
+{
+    if ($tl['page'] < $tl['pages'] - 1)
+        $nextPage = $tl['page'] + 1;
+    else
+        $nextPage = NULL;
+    return $nextPage;
+}
+
+/**
+ * Caluclate the last page numberfor search results
+ * @param  array $tl search result
+ * @return int            page index
+ */
+function getLastSearchPage($tl)
+{
+    if ($tl['pages'] == 0)
+        $lastPage = 0;
+    else
+        $lastPage = $tl['pages'] - 1;
+    return $lastPage;
+}
 
 
 /**
  * Initialize the OPDS generator
  * @param $container
  * @param $request current request
- * @return OpdsGenerator
+ * @return \BicBucStriim\OpdsGenerator
  */
 function mkOpdsGenerator($container, $request)
 {
@@ -65,6 +128,7 @@ function mkRootUrl($request, $relativeUrls=true)
     if ($relativeUrls) {
         $root = rtrim($uri->getPath(), "/");
     } else {
+        // TODO check if basePath and path are really separate
         $root = rtrim($uri->getBasePath() . $uri->getPath(), "/");
     }
     return $root;

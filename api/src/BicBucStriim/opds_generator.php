@@ -501,7 +501,7 @@ class OpdsGenerator {
    *                              else a direct one 
    */
   function partialAcquisitionEntry($entry, $protected) {
-    $titleLink = $this->bbs_root.'/opds/titles/'.$entry['book']->id;
+    $titleLink = $this->bbs_root.'/titles/'.$entry['book']->id;
     $this->xmlw->startElement('entry');
     $this->xmlw->writeElement('id','urn:bicbucstriim:'.$titleLink);
     $this->xmlw->writeElement('title',$entry['book']->title);
@@ -529,6 +529,7 @@ class OpdsGenerator {
       $ext = strtolower($format->format);
       $bp = Utilities::bookPath($this->calibre_dir,$entry['book']->path,$fname.'.'.$ext);
       $mt = Utilities::titleMimeType($bp);
+      // TODO download protection for OPDS is not yet implemented
       if ($protected)
         $this->indirectDownloadLink($titleLink.'/showaccess/', $mt);
        else      
