@@ -15,6 +15,7 @@ atomUriExceptOPDS = string - ( string "http://opds-spec.org/acquisition/buy"
                              | string "http://opds-spec.org/acquisition/subscribe"
                              | string "http://opds-spec.org/acquisition/sample" )
 
+#
 # Next is OPDSUrisExceptBuy, which is used to describe an atomLink whose
 # rel value is from OPDS Catalogs but is not ".../acquisition/buy". In such
 # cases, an opds:price element is optional.
