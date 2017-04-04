@@ -1,6 +1,6 @@
 <?php
 require_once 'BicBucStriim/BicBucStriim.php';
-require_once 'BicBucStriim/calibre.php';
+require_once 'BicBucStriim/Calibre.php';
 require_once 'BicBucStriim/CalibreFilter.php';
 require_once 'BicBucStriim/app_constants.php';
 require_once 'BicBucStriim/mailer.php';
