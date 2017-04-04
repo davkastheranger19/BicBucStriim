@@ -1,9 +1,9 @@
 <?php
-namespace Aura\Auth\_Config;
+namespace Aura\Auth;
 
 use Aura\Di\_Config\AbstractContainerTest;
 
-class CommonTest extends AbstractContainerTest
+class ContainerTest extends AbstractContainerTest
 {
     protected function getConfigClasses()
     {
@@ -43,7 +43,7 @@ class CommonTest extends AbstractContainerTest
                 'dnformat' => 'fake-dnformat',
             )),
             array('Aura\Auth\Adapter\PdoAdapter', array(
-                'pdo' => new FakePDO,
+                'pdo' => new FakePdo,
                 'verifier' => new \Aura\Auth\Verifier\PasswordVerifier('md5'),
             )),
             array('Aura\Auth\Auth'),

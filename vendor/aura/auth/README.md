@@ -26,14 +26,7 @@ Alternatively, [download a release](https://github.com/auraphp/Aura.Auth/release
 [![Code Coverage](https://scrutinizer-ci.com/g/auraphp/Aura.Auth/badges/coverage.png?b=develop-2)](https://scrutinizer-ci.com/g/auraphp/Aura.Auth/?branch=develop-2)
 [![Build Status](https://travis-ci.org/auraphp/Aura.Auth.png?branch=develop-2)](https://travis-ci.org/auraphp/Aura.Auth)
 
-To run the unit tests at the command line, issue `phpunit -c tests/unit/`. (This requires [PHPUnit][] to be available as `phpunit`.)
-
-[PHPUnit]: http://phpunit.de/manual/
-
-To run the [Aura.Di][] container configuration tests at the command line, go to the _tests/container_ directory and issue `./phpunit.sh`. (This requires [PHPUnit][] to be available as `phpunit` and [Composer][] to be available as `composer`.)
-
-[Aura.Di]: https://github.com/auraphp/Aura.Di
-[Composer]: http://getcomposer.org/
+To run the unit tests at the command line, issue `composer install` and then `vendor/bin/phpunit` at the package root. This requires [Composer](http://getcomposer.org/) to be available as `composer`.
 
 This library attempts to comply with [PSR-1][], [PSR-2][], and [PSR-4][]. If
 you notice compliance oversights, please send a patch via pull request.
@@ -423,6 +416,7 @@ You may wish to extend one of the existing adapters to add login/logout/resume b
 <?php
 use Aura\Auth\Adapter\AdapterInterface;
 use Aura\Auth\Auth;
+use Aura\Auth\Status;
 
 class CustomAdapter implements AdapterInterface
 {
@@ -440,7 +434,7 @@ class CustomAdapter implements AdapterInterface
     }
 
     // AdapterInterface::logout()
-    public function logout(Auth $auth)
+    public function logout(Auth $auth, $status = Status::ANON)
     {
         $this->updateLogoutTime($auth->getUsername(), time());
     }
@@ -488,7 +482,7 @@ namespace OAuth2\Adapter;
 use Aura\Auth\Adapter\AdapterInterface;
 use Aura\Auth\Exception;
 use Aura\Auth\Auth;
-use Aura\Auth\Adapter\Status;
+use Aura\Auth\Status;
 use League\OAuth2\Client\Provider\AbstractProvider;
 
 class LeagueOAuth2Adapter implements AdapterInterface
@@ -763,7 +757,7 @@ $login_service->login($auth, array(
 
 #### Logging Out
 
-This is an example of the code needed to effect a login. Note that the `echo` statements are intended to explain the different resulting states of the `logout()` call, and may be replaced by whatever logic you feel is appropriate.
+This is an example of the code needed to effect a logout. Note that the `echo` statements are intended to explain the different resulting states of the `logout()` call, and may be replaced by whatever logic you feel is appropriate.
 
 ```php
 <?php

@@ -1,7 +1,7 @@
 {
     "name": "aura/auth",
     "type": "library",
-    "description": "Aura Auth provides a unified interface to authenticate a user with local or remote authentication systems.",
+    "description": "Provides a unified interface to authenticate a user with local or remote authentication systems.",
     "keywords": [
         "auth",
         "authenticate",
@@ -30,6 +30,16 @@
             "config": {
                 "common": "Aura\\Auth\\_Config\\Common"
             }
+        }
+    },
+    "require-dev": {
+        "aura/di": "~2.0",
+        "phpunit/phpunit": "~5.7 || ~4.8"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aura\\Auth\\": "tests/",
+            "Aura\\Di\\": "vendor/aura/di/tests/"
         }
     },
     "suggest": {

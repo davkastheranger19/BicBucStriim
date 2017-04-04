@@ -11,6 +11,7 @@
 namespace BicBucStriim;
 
 use PDO;
+use RedBeanPHP\OODBBean;
 use RedBeanPHP\R;
 
 class BicBucStriim {
@@ -65,6 +66,8 @@ class BicBucStriim {
             if (!R::hasDatabase('default')) {
                 R::setup('sqlite:'.$rp);
             }
+            R::setAutoResolve(true);
+            //R::getRedBean()->setBeanHelper(new BbsBeanHelper());
 			R::freeze($freeze);
 		} else {
 			$this->mydb = NULL;
@@ -320,10 +323,10 @@ class BicBucStriim {
 	 * Find a Calibre item.
 	 * @param int 	calibreType 	
 	 * @param int 	calibreId 
-	 * @return 		object, the Calibre item
+	 * @return 		OODBBean
 	 */
 	public function getCalibreThing($calibreType, $calibreId){
-		return R::findOne('calibrething', 
+		return R::findOne('calibrething',
 			' ctype = :type and cid = :id',
 			array(
 				':type' => $calibreType,
@@ -354,7 +357,7 @@ class BicBucStriim {
 		return $calibreThing;
 	}
 
-	/**
+    /**
 	 * Delete an author's thumbnail image.
 	 *
 	 * Deletes the thumbnail artefact, and then the CalibreThing if that
@@ -367,7 +370,7 @@ class BicBucStriim {
 		$ret = true;
 		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
 		if (!is_null($calibreThing)) {
-			$artefact = $calibreThing->getAuthorThumbnail();
+			$artefact = $this->getFirstArtefact($calibreThing);
 			if (!is_null($artefact)) {
 				$ret = unlink($artefact->url);
 				unset($calibreThing->ownArtefact[$artefact->id]);
@@ -382,20 +385,46 @@ class BicBucStriim {
 		return $ret;
 	}
 
-	/**
+    /**
+     * Return the author thumbnail file related to this Calibre entitiy.
+     * @return string 	Path to thumbnail file or null
+     */
+    public function getFirstArtefact($calibreThing) {
+        $artefacts = array_values(array_filter($calibreThing->ownArtefact, function($artefact) { return($artefact->atype == DataConstants::AUTHOR_THUMBNAIL_ARTEFACT); }));
+        if (empty($artefacts))
+            return null;
+        else
+            return $artefacts[0];
+    }
+
+    /**
+     * Get the file name of an author's thumbnail image.
+     * @param int 	authorId 	Calibre ID of the author
+     * @return 		string, file name of the thumbnail image, or null
+     */
+    public function getAuthorThumbnail($authorId) {
+        $calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
+        if (is_null($calibreThing)) {
+            return null;
+        } else {
+            return $this->getFirstArtefact($calibreThing);
+        }
+    }
+
+    /**
 	 * Change the thumbnail image for an author.
 	 *
 	 * @param int 		authorId 	Calibre ID of the author
 	 * @param string 	authorName 	Calibre name of the author
 	 * @param boolean 	clipped 	true = image should be clipped, else stuffed
-	 * @param string 	file 		File name of the input image	 
+	 * @param string 	file 		File name of the input image
 	 * @param string 	mime 		Mime type of the image
 	 * @return 			string, file name of the thumbnail image, or null
 	 */
 	public function editAuthorThumbnail($authorId, $authorName, $clipped, $file, $mime) {
 		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
 		if (is_null($calibreThing))
-			$calibreThing = $this->addCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId, $authorName);		
+			$calibreThing = $this->addCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId, $authorName);
 
 		if (($mime == 'image/jpeg')
 		|| ($mime == "image/jpg")
@@ -408,9 +437,9 @@ class BicBucStriim {
 		if (file_exists($fname))
 			unlink($fname);
 
-		if ($clipped) 
+		if ($clipped)
 			$created = $this->thumbnailClipped($file, $png, self::THUMB_RES, self::THUMB_RES, $fname);
-		else 
+		else
 			$created = $this->thumbnailStuffed($file, $png,  self::THUMB_RES, self::THUMB_RES, $fname);
 
 		$artefact = $calibreThing->getAuthorThumbnail();
@@ -423,20 +452,6 @@ class BicBucStriim {
 			R::store($calibreThing);
 		}
 		return $created;
-	}
-
-	/**
-	 * Get the file name of an author's thumbnail image.
-	 * @param int 	authorId 	Calibre ID of the author
-	 * @return 		string, file name of the thumbnail image, or null
-	 */
-	public function getAuthorThumbnail($authorId) {
-		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
-		if (is_null($calibreThing)) {
-			return null;
-		} else {
-			return $calibreThing->getAuthorThumbnail();
-		}
 	}
 
 	/**
@@ -505,16 +520,25 @@ class BicBucStriim {
 		return $cleared;
 	}
 
+    /**
+     * Return author links releated to this Calibre entitiy.
+     * @param OODBeans $calibreThing
+     * @return array 	all available author links
+     */
+    public function getLinks($calibreThing) {
+        return array_values(array_filter($calibreThing->ownLink, function($link) { return($link->ltype == DataConstants::AUTHOR_LINK); }));
+    }
+
 	/**
 	 * Return all links defined for an author.
-	 * @param int 	authorId 	Calibre ID for the author
+	 * @param int 	$authorId 	Calibre ID for the author
 	 * @return array 	author links
 	 */
 	public function authorLinks($authorId) {
 		$links = array();
 		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
 		if (!is_null($calibreThing)) {
-			$links = $calibreThing->getAuthorLinks();
+			$links = $this->getLinks($calibreThing);
 		}
 		return $links;
 	}	
@@ -570,6 +594,19 @@ class BicBucStriim {
 		return $ret;
 	}
 
+    /**
+     * Return the author note text related to this Calibre entitiy.
+     * @param OODBean   $calibreThing
+     * @return string 	text or null
+     */
+    public function getFirstNote($calibreThing) {
+        $notes = array_values(array_filter($calibreThing->ownNote, function($note) { return($note->ntype == DataConstants::AUTHOR_NOTE); }));
+        if (empty($notes))
+            return null;
+        else
+            return $notes[0];
+    }
+
 	/**
 	 * Get the note text fro an author.
 	 * @param int 	authorId 	Calibre ID of the author
@@ -580,7 +617,7 @@ class BicBucStriim {
 		if (is_null($calibreThing)) {
 			return null;
 		} else {
-			return $calibreThing->getAuthorNote();
+			return $this->getFirstNote($calibreThing);
 		}	
 	}
 
@@ -596,7 +633,7 @@ class BicBucStriim {
 		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
 		if (is_null($calibreThing))
 			$calibreThing = $this->addCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId, $authorName);		
-		$note = $calibreThing->getAuthorNote();
+		$note = $this->getFirstNote($calibreThing);
 		if (is_null($note)) {
 			$note = R::dispense('note');
 			$note->ntype = DataConstants::AUTHOR_NOTE;
@@ -622,7 +659,7 @@ class BicBucStriim {
 		$ret = false;
 		$calibreThing = $this->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, $authorId);
 		if (!is_null($calibreThing)) {
-			$note = $calibreThing->getAuthorNote();
+			$note = $this->getFirstNote($calibreThing);
 			if (!is_null($note)) {
 				unset($calibreThing->ownNote[$note->id]);
 				$calibreThing->refctr -= 1;

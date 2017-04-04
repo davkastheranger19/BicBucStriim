@@ -11,18 +11,16 @@ class LdapAdapterTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->phpfunc = $this->getMock(
-            'Aura\Auth\Phpfunc',
-            array(
-                'ldap_connect',
-                'ldap_bind',
-                'ldap_unbind',
-                'ldap_set_option',
-                'ldap_close',
-                'ldap_errno',
-                'ldap_error'
-            )
-        );
+        $this->phpfunc = $this->getMockBuilder('Aura\Auth\Phpfunc')
+             ->setMethods(array(
+                 'ldap_connect',
+                 'ldap_bind',
+                 'ldap_unbind',
+                 'ldap_set_option',
+                 'ldap_errno',
+                 'ldap_error'
+             ))
+             ->getMock();        
 
         $this->adapter = new LdapAdapter(
             $this->phpfunc,
@@ -62,10 +60,6 @@ class LdapAdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->phpfunc->expects($this->once())
             ->method('ldap_unbind')
-            ->will($this->returnValue(true));
-
-        $this->phpfunc->expects($this->once())
-            ->method('ldap_close')
             ->will($this->returnValue(true));
 
         $actual = $this->adapter->login(array(
@@ -118,7 +112,7 @@ class LdapAdapterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('Operations Error'));
 
         $this->phpfunc->expects($this->once())
-            ->method('ldap_close')
+            ->method('ldap_unbind')
             ->will($this->returnValue(true));
 
         $this->setExpectedException('Aura\Auth\Exception\BindFailed');
