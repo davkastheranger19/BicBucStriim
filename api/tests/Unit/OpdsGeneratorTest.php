@@ -20,6 +20,7 @@ use BicBucStriim\OpdsGenerator;
 use BicBucStriim\L10n;
 use BicBucStriim\CalibreFilter;
 use SimpleXMLElement;
+use XMLReader;
 
 class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
 {
@@ -37,7 +38,7 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
         global $langen;
         if (file_exists(self::DATA))
             system("rm -rf " . self::DATA);
-        print_r(getcwd());
+        //print_r(getcwd());
         mkdir(self::DATA);
         chmod(self::DATA, 0777);
         copy(self::DB2, self::DATADB);
@@ -60,13 +61,13 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
     # Validation helper: validate relaxng
     function opdsValidateSchema($feed)
     {
-        $res = system('jing ' . self::OPDS_RNG . ' ' . $feed);
-        if ($res != '') {
-            echo 'RelaxNG validation error: ' . $res;
-            return false;
-        } else
-            return true;
+        $xml = \XMLReader::open($feed);
+        $xml->setRelaxNGSchema(self::OPDS_RNG);
+        $xml->setParserProperty(XMLReader::VALIDATE, true);
+
+        return $xml->isValid();
     }
+
 
     # Validation helper: validate opds
     function opdsValidate($feed, $version)
