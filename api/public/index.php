@@ -29,5 +29,6 @@ require __DIR__ . '/../src/helpers.php';
 require __DIR__ . '/../src/routes/admin.php';
 require __DIR__ . '/../src/routes/auth.php';
 require __DIR__ . '/../src/routes/opds.php';
+require __DIR__ . '/../src/routes/titles.php';
 // Run app
 $app->run();

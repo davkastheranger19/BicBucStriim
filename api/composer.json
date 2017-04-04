@@ -56,7 +56,10 @@
     ],
     "stop": "docker-compose stop",
     "prep-test": [
-      "rm -rf tests/work"
+      "rm -rf tests/work",
+      "mkdir tests/work",
+      "cp -r data tests/work",
+      "cp -r tests/fixtures/lib2 tests/worklib"
     ],
     "test": [
       "@prep-test",

@@ -26,16 +26,18 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected $environment;
     protected $token;
 
-    const CALIBRE = './tests/fixtures/lib2';
-    const DB2 = './tests/fixtures/data2.db';
+    const CALIBRE = __DIR__ . '/../fixtures/lib2';
+    const DB2 = __DIR__ . '/../fixtures/data2.db';
 
-    const DATA = './tests/data';
-    const DATADB = './tests/data/data.db';
+    const DATA = __DIR__ . '/../data';
+    const DATADB = __DIR__ . '/../data/data.db';
 
 
     function setUp() {
         if (file_exists(self::DATA))
             system("rm -rf ".self::DATA);
+        //print_r(getcwd().'\n');
+        //print_r(self::DATA);
         mkdir(self::DATA);
         chmod(self::DATA,0777);
         copy(self::DB2, self::DATADB);
@@ -115,7 +117,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
 
         // Use the application settings
         $settings = require __DIR__ . '/../../src/settings.php';
-        $settings['settings']['bbs']['dataDb'] = __DIR__ . '/../.' . self::DATADB;
+        $settings['settings']['bbs']['dataDb'] = self::DATADB;
 
         // Instantiate the application
         $app = new App($settings);
@@ -134,6 +136,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
         require __DIR__ . '/../../src/routes/auth.php';
         require __DIR__ . '/../../src/routes/admin.php';
         require __DIR__ . '/../../src/routes/opds.php';
+        require __DIR__ . '/../../src/routes/titles.php';
         // Process the application
         $response = $app->process($request, $response);
 
