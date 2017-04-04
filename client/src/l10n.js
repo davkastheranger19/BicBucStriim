@@ -16,7 +16,7 @@ export function Locs() {
 	      de: msgs_de,
 	      es: msgs_es,
 	      fr: msgs_fr,
-	      gl: msgs_fr,
+	      gl: msgs_gl,
 	      hu: msgs_hu,
 	      it: msgs_it,
 	      nl: msgs_nl

@@ -37,8 +37,8 @@ class App extends Component {
           <Header/>
           <Switch>         
             <Route exact={true} path="/" component={Home}/>
-            <Route path="/titles/:id" component={TitleDetail}/>
             <Route path="/titles" component={Titles}/>
+            <Route path="/titles/:id" component={TitleDetail}/>
             <Route path="/authors" component={Authors}/>
             <Route path="/tags" component={Tags}/>
             <Route path="/series" component={Series}/>
