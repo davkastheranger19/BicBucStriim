@@ -7,8 +7,8 @@
  * Licensed under MIT License, see LICENSE
  * 
  */ 
-require_once 'data_constants.php';
-require_once 'calibre_thing.php';
+require_once 'DataConstants.php';
+require_once 'Model_Calibrething.php';
 
 class BbsData {
 

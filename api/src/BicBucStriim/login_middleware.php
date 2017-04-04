@@ -8,7 +8,7 @@
  */ 
 
 require 'vendor/autoload.php';
-require_once 'lib/BicBucStriim/bicbucstriim.php';
+require_once 'lib/BicBucStriim/BicBucStriim.php';
 require_once 'lib/BicBucStriim/session_factory.php';
 require_once 'lib/BicBucStriim/session.php';
 use Aura\Auth;

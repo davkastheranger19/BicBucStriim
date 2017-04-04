@@ -29,6 +29,8 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "": "src/",
+      "BicBucStriim\\": "src/BicBucStriim",
       "Tests\\": "tests/"
     }
   },

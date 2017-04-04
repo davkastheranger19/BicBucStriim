@@ -1,5 +1,5 @@
 <?php
-require_once 'BicBucStriim/bicbucstriim.php';
+require_once 'BicBucStriim/BicBucStriim.php';
 require_once 'BicBucStriim/calibre.php';
 require_once 'BicBucStriim/calibre_filter.php';
 require_once 'BicBucStriim/app_constants.php';

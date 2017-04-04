@@ -5,13 +5,12 @@ namespace Tests\Unit;
  * OPDS Generator test suite.
  *
  * Needs the follwoing external tools installed:
- * - jing (http://code.google.com/p/jing-trang/)
  * - opds_validator (https://github.com/zetaben/opds-validator)
  */
 //set_include_path("tests:vendor");
 //require_once('simpletest/simpletest/autorun.php');
 //require_once('lib/BicBucStriim/l10n.php');
-//require_once('lib/BicBucStriim/bicbucstriim.php');
+//require_once('lib/BicBucStriim/BicBucStriim.php');
 //require_once('lib/BicBucStriim/opds_generator.php');
 
 use BicBucStriim\BicBucStriim;
@@ -35,7 +34,6 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
 
     function setUp()
     {
-        global $langen;
         if (file_exists(self::DATA))
             system("rm -rf " . self::DATA);
         //print_r(getcwd());
