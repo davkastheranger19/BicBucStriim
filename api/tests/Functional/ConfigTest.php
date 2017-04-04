@@ -2,7 +2,7 @@
 
 namespace Tests\Functional;
 
-require 'src/BicBucStriim/app_constants.php';
+require 'src/BicBucStriim/AppConstants.php';
 
 use BicBucStriim\AppConstants;
 

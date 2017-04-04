@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../BicBucStriim/user_transformer.php';
+require_once __DIR__ . '/../BicBucStriim/UserTransformer.php';
 
 use Ramsey\Uuid\Uuid;
 use Firebase\JWT\JWT;

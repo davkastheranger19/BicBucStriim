@@ -9,9 +9,9 @@ namespace Tests\Unit;
  */
 //set_include_path("tests:vendor");
 //require_once('simpletest/simpletest/autorun.php');
-//require_once('lib/BicBucStriim/l10n.php');
+//require_once('lib/BicBucStriim/L10n.php');
 //require_once('lib/BicBucStriim/BicBucStriim.php');
-//require_once('lib/BicBucStriim/opds_generator.php');
+//require_once('lib/BicBucStriim/OpdsGenerator.php');
 
 use BicBucStriim\BicBucStriim;
 use BicBucStriim\Calibre;

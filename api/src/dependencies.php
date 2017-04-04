@@ -1,12 +1,4 @@
 <?php
-require_once 'BicBucStriim/BicBucStriim.php';
-require_once 'BicBucStriim/Calibre.php';
-require_once 'BicBucStriim/CalibreFilter.php';
-require_once 'BicBucStriim/app_constants.php';
-require_once 'BicBucStriim/mailer.php';
-require_once 'BicBucStriim/token.php';
-require_once 'BicBucStriim/opds_generator.php';
-require_once 'BicBucStriim/l10n.php';
 
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\HttpBasicAuthentication;

@@ -3,7 +3,7 @@
 namespace BicBucStriim;
 
 require_once 'utilities.php';
-require_once 'l10n.php';
+require_once 'L10n.php';
 
 use \XMLWriter;
 
