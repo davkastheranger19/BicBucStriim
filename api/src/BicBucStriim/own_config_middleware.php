@@ -34,10 +34,10 @@ class OwnConfigMiddleware {
     public function __invoke($request, $response, $next) {
         $config_status = $this->check_config_db($this->bbs, $this->config);
         if ($config_status == 0) {
-            $data = array(code => AppConstants::ERROR_BAD_DB, reason => 'No or bad configuration database.');
+            $data = array('code' => AppConstants::ERROR_BAD_DB, 'reason' => 'No or bad configuration database.');
             return $response->withStatus(500, 'No or bad configuration database.')->withJson($data);
         } elseif ($config_status == 2) {
-            $data = array(code => AppConstants::ERROR_BAD_SCHEMA_VERSION, reason => 'Different db schema version detected.');
+            $data = array('code' => AppConstants::ERROR_BAD_SCHEMA_VERSION, 'reason' => 'Different db schema version detected.');
             return $response->withStatus(500, 'Different db schema version detected.')->withJson($data);
         } else {
             return $next($request, $response);
