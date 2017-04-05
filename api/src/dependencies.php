@@ -1,5 +1,5 @@
 <?php
-
+require_once 'BicBucStriim/utilities.php';
 use Slim\Middleware\JwtAuthentication;
 use Slim\Middleware\HttpBasicAuthentication;
 use \RKA\Middleware\SchemeAndHost;
@@ -104,18 +104,30 @@ $container['calibre'] = function ($c) {
 };
 
 use \Slim\Middleware\HttpBasicAuthentication\PdoAuthenticator;
-$container["HttpBasicAuthentication"] = function ($c) {
+$container["HttpBasicAuthentication"] = function ($container) {
     return new HttpBasicAuthentication([
-        'path' => "/token",
+        'path' => ["/token","/opds"],
+        'passthrough' => ["/info", "/data/titles", "/data/authors"],
         'relaxed' => ['localhost'],
         'authenticator' => new PdoAuthenticator([
-            'pdo' => $c->get('bbs')->mydb,
+            'pdo' => $container->get('bbs')->mydb,
             'table' => 'user',
             'user' => 'username',
             'hash' => 'password'
         ]),
-        'callback' => function ($request, $response, $arguments) use ($c) {
-            $c['username']=$arguments['user'];
+        "error" => function ($request, $response, $arguments) {
+            $data['code'] = "error";
+            $data['reason'] = $arguments["message"];
+            return $response
+                ->withStatus(401)
+                ->withHeader("Content-Type", "application/json")
+                ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+        },
+        'callback' => function ($request, $response, $arguments) use ($container) {
+            $container['logger']->debug('HttpBasicAuthentication got user ' . var_export($arguments['user'],true));
+            $container['username']=$arguments['user'];
+            $user = $container->bbs->userByName($arguments['user']);
+            $container->user = $user;
         }
     ]);
 };
@@ -124,14 +136,11 @@ $container['token'] = function ($container) {
     return new Token;
 };
 
-$container['user'] = function ($container) {
-    return null;
-};
 
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
         "path" => "/",
-        "passthrough" => ["/token", "/info", "/opds"],
+        "passthrough" => ["/token", "/info", "/opds", "/data/titles", "/data/authors"],
         // TODO change password secret handling
         "secret" => "supersecretkeyyoushouldnotcommittogithub",
         //"secret" => getenv("JWT_SECRET"),
@@ -142,6 +151,7 @@ $container["JwtAuthentication"] = function ($container) {
             $data['code'] = "error";
             $data['reason'] = $arguments["message"];
             return $response
+                ->withStatus(401)
                 ->withHeader("Content-Type", "application/json")
                 ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
         },
@@ -149,6 +159,7 @@ $container["JwtAuthentication"] = function ($container) {
             $container["token"]->hydrate($arguments["decoded"]);
             $token =  $container['token'];
             if (isset($token) && !is_null($token->getUid())) {
+                $container['logger']->debug('JwtAuthentication got user ' . var_export($token,true));
                 $user = $container->bbs->user($token->getUid());
                 $container['user'] = $user;
             }
