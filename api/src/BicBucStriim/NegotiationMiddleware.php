@@ -62,5 +62,7 @@ class NegotiationMiddleware
             return $next($request, $response);
         }
         */
+
+        return $next($request, $response);
     }
 }
