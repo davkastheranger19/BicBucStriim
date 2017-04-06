@@ -126,7 +126,7 @@ function mkRootUrl($request, $relativeUrls=true)
 {
     $uri = $request->getUri();
     if ($relativeUrls) {
-        $root = rtrim($uri->getPath(), "/");
+        $root = rtrim($uri->getBasePath(), "/");
     } else {
         // TODO check if basePath and path are really separate
         $root = rtrim($uri->getBasePath() . $uri->getPath(), "/");
@@ -195,4 +195,48 @@ function processNewConfig($c, $config, $newConfig, $key, $value) {
 function isEMailValid($mail)
 {
     return (filter_var($mail, FILTER_VALIDATE_EMAIL) !== FALSE);
+}
+
+/**
+ * Check if a title is available to the current user
+ * @param bool      $login_required
+ * @param array     $user
+ * @param array     $book_details    output of BicBucStriim::title_details()
+ * @return        true if the title is not available for the user, else false
+ */
+function title_forbidden($login_required, $user, $book_details)
+{
+    if (!$login_required) {
+        return false;
+    } else {
+        if (empty($user->languages) && empty($user->tags)) {
+            return false;
+        } else {
+            if (!empty($user->languages)) {
+                $lang_found = false;
+                foreach ($book_details['langcodes'] as $langcode) {
+                    if ($langcode === $user->languages) {
+                        $lang_found = true;
+                        break;
+                    }
+                }
+                if (!$lang_found) {
+                    return true;
+                }
+            }
+            if (!empty($user->tags)) {
+                $tag_found = false;
+                foreach ($book_details['tags'] as $tag) {
+                    if ($tag->name === $user->tags) {
+                        $tag_found = true;
+                        break;
+                    }
+                }
+                if ($tag_found) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 }
