@@ -2,7 +2,8 @@ version: '3'
 
 services:
     slim:
-        image: php:5-apache
+        build: .
+        image: php:5-apache-gd
         working_dir: /var/www
         command: php -d date.timezone=Europe/Berlin -S 0.0.0.0:8080 -t public public/index.php
         environment:
