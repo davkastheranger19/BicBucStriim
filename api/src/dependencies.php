@@ -107,8 +107,10 @@ use \Slim\Middleware\HttpBasicAuthentication\PdoAuthenticator;
 $container["HttpBasicAuthentication"] = function ($container) {
     return new HttpBasicAuthentication([
         'path' => ["/token","/opds"],
-        'passthrough' => ["/info", "/data/titles", "/data/authors"],
+        'passthrough' => ["/info", "/thumbnails"],
         'relaxed' => ['localhost'],
+        // TODO make security configurable
+        'secure' => false,
         'authenticator' => new PdoAuthenticator([
             'pdo' => $container->get('bbs')->mydb,
             'table' => 'user',
@@ -139,8 +141,10 @@ $container['token'] = function ($container) {
 
 $container["JwtAuthentication"] = function ($container) {
     return new JwtAuthentication([
-        "path" => "/",
-        "passthrough" => ["/token", "/info", "/opds", "/data/titles", "/data/authors"],
+        "path" => ["/titles"],
+        "passthrough" => ["/token", "/opds", "/info","/thumbnails"],
+        // TODO make security configurable
+        "secure" => false,
         // TODO change password secret handling
         "secret" => "supersecretkeyyoushouldnotcommittogithub",
         //"secret" => getenv("JWT_SECRET"),
