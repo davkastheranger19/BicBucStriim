@@ -697,9 +697,9 @@ class BicBucStriim {
 		$newx = ($width / 2) - ($minwh / 2);
 		$newy = ($height / 2) - ($minwh / 2);
 		$inbetween = imagecreatetruecolor($minwh, $minwh);
-		imagecopy($inbetween, $source, 0, 0, $newx, $newy, $minwh, $minwh);				
+		imagecopy($inbetween, $source, 0, 0, $newx, $newy, $minwh, $minwh);
 		imagecopyresized($thumb, $inbetween, 0, 0, 0, 0, $newwidth, $newheight, $minwh, $minwh);
-		$created = imagepng($thumb, $thumb_path);				
+		$created = imagepng($thumb, $thumb_path);
 		return $created;
 	}
 
@@ -730,9 +730,9 @@ class BicBucStriim {
 			$dsty = (int) $diff/2;
 		}
 		$inbetween = $this->transparentImage($maxwh, $maxwh);
-		imagecopy($inbetween, $source, $dstx, $dsty, 0, 0, $width, $height);				
+		imagecopy($inbetween, $source, $dstx, $dsty, 0, 0, $width, $height);
 		imagecopyresampled($thumb, $inbetween, 0, 0, 0, 0, $newwidth, $newheight, $maxwh, $maxwh);
-		$created = imagepng($thumb, $thumb_path);				
+		$created = imagepng($thumb, $thumb_path);
 		imagedestroy($thumb);
 		imagedestroy($inbetween);
 		imagedestroy($source);
@@ -751,7 +751,7 @@ class BicBucStriim {
 	private function transparentImage($width, $height) {
 		$img = imagecreatetruecolor($width, $height);
 		imagealphablending($img, false);
-		imagesavealpha($img, true); 				
+		imagesavealpha($img, true);
 		$backgr = imagecolorallocatealpha($img, 255, 255, 255, 127);
 		imagefilledrectangle($img, 0, 0, $width, $height, $backgr);
 		return $img;

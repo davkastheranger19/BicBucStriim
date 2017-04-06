@@ -1043,6 +1043,24 @@ class Calibre
     }
 
     /**
+     * Returns the path to the file of a book or NULL.
+     * @param  int $id book id
+     * @param  string $format format name
+     * @return string       full path to image file or NULL
+     */
+    function titleFileByFormat($id, $format)
+    {
+        $book = $this->title($id);
+        if (is_null($book))
+            return NULL;
+        else {
+            $xformat = $this->findOne(Data::class, 'SELECT * FROM data WHERE book=:id AND format=:format',
+                array('id'=>$id, 'format' => $format));
+            $file = $xformat->name . '.' . strtolower($format);
+            return Utilities::bookPath($this->calibre_dir, $book->path, $file);
+        }
+    }
+    /**
      * Return the formats for a book
      * @param  int $bookid Calibre book id
      * @return array                the formats for the book
