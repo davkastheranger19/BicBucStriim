@@ -41,21 +41,15 @@ class NegotiationMiddleware
 
         # try to find a common language, if there is no fit use english
         $language = $accept->negotiateLanguage($this->allowedLangs);
-        if (isset($language) && !empty($language->getType())) {
+        $this->c['logger']->debug('NegotiationMiddleware Found Language '.var_export($language, true));
+        if ($language && !empty($language->getType())) {
             $this->c['l10n'] = new L10n($language->getType());
         } else {
             $this->c['l10n'] = new L10n('en');
         }
 
-        $path = $request->getUri()->getPath();
-        if (substr($path, 0,5) === '/opds') {
-            $available = array(
-                OpdsGenerator::ATOM_CATALOG,
-                OpdsGenerator::OPENSEARCH_MIME
-            );
-        } else {
-            $available = array('application/json');
-        }
+        // TODO is media negotiation helpful?
+        /*
         $media = $accept->negotiateMedia($available);
         if ($media == false || empty($media->getValue())) {
             $data = array(
@@ -67,5 +61,6 @@ class NegotiationMiddleware
         } else {
             return $next($request, $response);
         }
+        */
     }
 }
