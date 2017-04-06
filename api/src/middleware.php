@@ -10,3 +10,4 @@ $app->add(new \BicBucStriim\OwnConfigMiddleware($app->getContainer()->logger, $a
 $app->add(new \RKA\Middleware\SchemeAndHost());
 // NOTE only JSON and OPDS requests will be accepted
 $app->add(new \BicBucStriim\NegotiationMiddleware($app->getContainer(), $app->getContainer()->settings['bbs']['langs']));
+$app->add(new \BicBucStriim\RequestLogMiddleware($app->getContainer()->logger, $app->getContainer()->config));
