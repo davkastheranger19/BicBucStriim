@@ -7,11 +7,6 @@ namespace Tests\Unit;
  * Needs the follwoing external tools installed:
  * - opds_validator (https://github.com/zetaben/opds-validator)
  */
-//set_include_path("tests:vendor");
-//require_once('simpletest/simpletest/autorun.php');
-//require_once('lib/BicBucStriim/L10n.php');
-//require_once('lib/BicBucStriim/BicBucStriim.php');
-//require_once('lib/BicBucStriim/OpdsGenerator.php');
 
 use BicBucStriim\BicBucStriim;
 use BicBucStriim\Calibre;
@@ -23,11 +18,12 @@ use XMLReader;
 
 class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
 {
-    const OPDS_RNG = '../tests/fixtures/opds_catalog_1_1.rng';
-    const DATA = './tests/data';
-    const DB2 = './tests/fixtures/data2.db';
-    const CDB2 = './tests/fixtures/lib2/metadata.db';
-    const DATADB = './tests/data/data.db';
+    const OPDS_RNG = __DIR__ . '/../fixtures/opds_catalog_1_1.rng';
+    const DATA = __DIR__ . '/../data';
+    const DB2 = __DIR__ . '/../fixtures/data2.db';
+    const CDB2 = __DIR__ . '/../fixtures/lib2/metadata.db';
+    const DATADB = __DIR__ . '/../data/data.db';
+    const TOOLS = __DIR__ . '/../tools';
 
     var $bbs;
     var $gen;
@@ -70,7 +66,7 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
     # Validation helper: validate opds
     function opdsValidate($feed, $version)
     {
-        $cmd = 'cd ./tests/tools;java -jar OPDSValidator.jar -v' . $version . ' ' . realpath($feed);
+        $cmd = 'cd '.self::TOOLS.';java -jar OPDSValidator.jar -v' . $version . ' ' . realpath($feed);
         $res = system($cmd);
         if ($res != '') {
             echo 'OPDS validation error: ' . $res;
@@ -113,7 +109,7 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
     function testPartialAcquisitionEntry()
     {
         $expected = '<entry>
- <id>urn:bicbucstriim:/bbs/titles/2</id>
+ <id>urn:bicbucstriim:/bbs/opds/titles/2</id>
  <title>Trutz Simplex</title>
  <dc:issued>2012</dc:issued>
  <updated>2012-01-01T11:59:59' . $this->genTimestampOffset('2012-01-01 11:59:59') . '</updated>
@@ -122,10 +118,10 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
  </author>
  <content type="text/html"></content>
  <dc:language>deu</dc:language>
- <link href="/bbs/titles/2/thumbnail/" type="image/png" rel="http://opds-spec.org/image/thumbnail"/>
- <link href="/bbs/titles/2/cover/" type="image/jpeg" rel="http://opds-spec.org/image"/>
- <link href="/bbs/titles/2/file/Trutz+Simplex+-+Hans+Jakob+Christoffel+von+Grimmelshausen.epub" type="application/epub+zip" rel="http://opds-spec.org/acquisition"/>
- <link href="/bbs/titles/2/file/Trutz+Simplex+-+Hans+Jakob+Christoffel+von+Grimmelshausen.mobi" type="application/x-mobipocket-ebook" rel="http://opds-spec.org/acquisition"/>
+ <link href="/bbs/thumbnails/titles/default_book.png" type="image/png" rel="http://opds-spec.org/image/thumbnail"/>
+ <link href="/bbs/opds/titles/2/cover/" type="image/jpeg" rel="http://opds-spec.org/image"/>
+ <link href="/bbs/opds/titles/2/format/EPUB/" type="application/epub+zip" rel="http://opds-spec.org/acquisition"/>
+ <link href="/bbs/opds/titles/2/format/MOBI/" type="application/x-mobipocket-ebook" rel="http://opds-spec.org/acquisition"/>
  <category term="Biografien &amp; Memoiren" label="Biografien &amp; Memoiren"/>
 </entry>
 ';
@@ -134,38 +130,6 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
         $book = $this->calibre->titleDetailsOpds($just_book);
         $this->gen->openStream(NULL);
         $this->gen->partialAcquisitionEntry($book, false);
-        $result = $this->gen->closeStream();
-        #print_r($result);
-        $this->assertEquals($expected, $result);
-    }
-
-    function testPartialAcquisitionEntryWithProtection()
-    {
-        $expected = '<entry>
- <id>urn:bicbucstriim:/bbs/titles/2</id>
- <title>Trutz Simplex</title>
- <dc:issued>2012</dc:issued>
- <updated>2012-01-01T11:59:59' . $this->genTimestampOffset('2012-01-01T11:59:59') . '</updated>
- <author>
-  <name>Grimmelshausen, Hans Jakob Christoffel von</name>
- </author>
- <content type="text/html"></content>
- <dc:language>deu</dc:language>
- <link href="/bbs/titles/2/thumbnail/" type="image/png" rel="http://opds-spec.org/image/thumbnail"/>
- <link href="/bbs/titles/2/cover/" type="image/jpeg" rel="http://opds-spec.org/image"/>
- <link href="/bbs/titles/2/showaccess/" type="text/html" rel="http://opds-spec.org/acquisition">
-  <opds:indirectAcquisition type="application/epub+zip"/>
- </link>
- <link href="/bbs/titles/2/showaccess/" type="text/html" rel="http://opds-spec.org/acquisition">
-  <opds:indirectAcquisition type="application/x-mobipocket-ebook"/>
- </link>
- <category term="Biografien &amp; Memoiren" label="Biografien &amp; Memoiren"/>
-</entry>
-';
-        $just_book = $this->calibre->title(2);
-        $book = $this->calibre->titleDetailsOpds($just_book);
-        $this->gen->openStream(NULL);
-        $this->gen->partialAcquisitionEntry($book, true);
         $result = $this->gen->closeStream();
         #print_r($result);
         $this->assertEquals($expected, $result);

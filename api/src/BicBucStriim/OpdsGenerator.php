@@ -501,7 +501,7 @@ class OpdsGenerator {
    *                              else a direct one 
    */
   function partialAcquisitionEntry($entry, $protected) {
-    $titleLink = $this->bbs_root.'/titles/'.$entry['book']->id;
+    $titleLink = $this->bbs_root.'/opds/titles/'.$entry['book']->id;
     $this->xmlw->startElement('entry');
     $this->xmlw->writeElement('id','urn:bicbucstriim:'.$titleLink);
     $this->xmlw->writeElement('title',$entry['book']->title);
@@ -518,22 +518,17 @@ class OpdsGenerator {
     $this->xmlw->text($entry['language']);
     $this->xmlw->endElement();
     if (isset($entry['book']->thumbnail) && $entry['book']->thumbnail) 
-      $tlink = $this->bbs_root.'/data/titles/thumb_'.$entry['book']->id.'.png';
+      $tlink = $this->bbs_root.'/thumbnails/titles/thumb_'.$entry['book']->id.'.png';
     else
-      $tlink = $titleLink.'/thumbnail/';
+      $tlink = $this->bbs_root.'/thumbnails/titles/default_book.png';
     $this->thumbnailLink($tlink);
     $this->imageLink($titleLink.'/cover/');
-    #$this->detailsLink($titleLink.'/thumbnail/');
     foreach($entry['formats'] as $format) {
       $fname = $format->name;
       $ext = strtolower($format->format);
       $bp = Utilities::bookPath($this->calibre_dir,$entry['book']->path,$fname.'.'.$ext);
       $mt = Utilities::titleMimeType($bp);
-      // TODO download protection for OPDS is not yet implemented
-      if ($protected)
-        $this->indirectDownloadLink($titleLink.'/showaccess/', $mt);
-       else      
-        $this->directDownloadLink($titleLink.'/file/'.urlencode($fname).'.'.$ext,$mt);
+      $this->directDownloadLink($titleLink.'/format/'.$format->format.'/', $mt);
     }
     foreach($entry['tags'] as $category) {
       $this->xmlw->startElement('category');
