@@ -50,6 +50,10 @@
       "mkdir tests/worklib",
       "cp -r tests/fixtures/lib2 tests/worklib"
     ],
+    "clean-work": [
+      "rm -rf tests/work",
+      "rm -rf tests/worklib"
+    ],
     "copy-src": [
       "cp -r src tests/work"
     ],
@@ -57,15 +61,11 @@
       "@prep-work",
       "docker-compose start"
     ],
-    "stop": "docker-compose stop",
-    "prep-test": [
-      "rm -rf tests/work",
-      "mkdir tests/work",
-      "cp -r data tests/work",
-      "cp -r tests/fixtures/lib2 tests/worklib"
+    "stop": [
+      "docker-compose stop",
+      "@clean-work"
     ],
     "test": [
-      "@prep-test",
       "phpunit"
       ]
   }

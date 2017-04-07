@@ -1,12 +1,14 @@
 <?php
 
 use BicBucStriim\OpdsGenerator;
+use BicBucStriim\Utilities;
 
 $app->group('/opds', function() {
     /**
      * Generate and send the OPDS root navigation catalog
      */
     $this->get('/', function($request, $response, $args) {
+        $this->logger->debug('/opds ');
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->rootCatalog(NULL);
         return mkOpdsResponse($response, $cat, OpdsGenerator::OPDS_MIME_NAV);
@@ -37,7 +39,7 @@ $app->group('/opds', function() {
             if (!empty($record['formats']))
                 array_push($books1, $record);
         }
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->newestCatalog(NULL, $books, false);
         return mkOpdsResponse($response, $cat, OpdsGenerator::OPDS_MIME_ACQ);
@@ -66,7 +68,7 @@ $app->group('/opds', function() {
         else
             $tl = $this->calibre->titlesSlice($lang, $index, $psize, $filter);
         $books1 = $this->calibre->titleDetailsFilteredOpds($tl['entries']);
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->titlesCatalog(NULL, $books, false,
             $tl['page'], getNextSearchPage($tl), getLastSearchPage($tl));
@@ -117,7 +119,7 @@ $app->group('/opds', function() {
         $psize = $this->config[\BicBucStriim\AppConstants::PAGE_SIZE];
         $tl = $this->calibre->authorDetailsSlice($lang, $id, $page, $psize, $filter);
         $books1 = $this->calibre->titleDetailsFilteredOpds($tl['entries']);
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->booksForAuthorCatalog(NULL, $books, $initial, $tl['author'], false,
             $tl['page'], getNextSearchPage($tl), getLastSearchPage($tl));
@@ -171,7 +173,7 @@ $app->group('/opds', function() {
         $psize = $this->config[\BicBucStriim\AppConstants::PAGE_SIZE];
         $tl = $this->calibre->seriesDetailsSlice($lang, $id, $page, $psize, $filter);
         $books1 = $this->calibre->titleDetailsFilteredOpds($tl['entries']);
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->booksForSeriesCatalog(NULL, $books, $initial, $tl['series'], false,
             $tl['page'], getNextSearchPage($tl), getLastSearchPage($tl));
@@ -200,7 +202,7 @@ $app->group('/opds', function() {
         $psize = $this->config[\BicBucStriim\AppConstants::PAGE_SIZE];
         $tl = $this->calibre->titlesSlice($lang, $index, $psize, $filter, $params['search']);
         $books1 = $this->calibre->titleDetailsFilteredOpds($tl['entries']);
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->searchCatalog(NULL, $books, false,
             $tl['page'], getNextSearchPage($tl), getLastSearchPage($tl), $params['search'],
@@ -253,10 +255,111 @@ $app->group('/opds', function() {
         $psize = $this->config[\BicBucStriim\AppConstants::PAGE_SIZE];
         $tl = $this->calibre->tagDetailsSlice($lang, $id, $page, $psize, $filter);
         $books1 = $this->calibre->titleDetailsFilteredOpds($tl['entries']);
-        $books = checkThumbnailOpds($books1, $this->bbs);
+        $books = checkThumbnailOpds($books1, $this->bbs, $this->calibre, $this->config[\BicBucStriim\AppConstants::THUMB_GEN_CLIPPED]);
         $gen = mkOpdsGenerator($this, $request);
         $cat = $gen->booksForTagCatalog(NULL, $books, $initial, $tl['tag'], false,
             $tl['page'], getNextSearchPage($tl), getLastSearchPage($tl));
         mkOpdsResponse($response, $cat, OpdsGenerator::OPDS_MIME_ACQ);
     });
+
+
+    /**
+     * Return the cover for the book with ID. Calibre generates only JPEGs, so we always return a JPEG.
+     * If there is no cover, return 404.
+     */
+    $this->get('/titles/{id}/cover/', function(Psr\Http\Message\ServerRequestInterface $request, $response, $args) {
+        $id = $args['id'];
+        $this->logger->debug('opds cover '.$id);
+        // parameter checking
+        if (!is_numeric($id)) {
+            $this->logger->warn('cover: invalid title id ' . $id);
+            return $response->withStatus(400)->write('Bad parameter');
+        }
+        $book = $this->calibre->title($id);
+        if (is_null($book)) {
+            $this->logger->debug("cover: book not found: " + $id);
+            return $response->withStatus(404)->write('Book not found');
+        }
+        if ($book->has_cover) {
+            $cover = $this->calibre->titleCover($id);
+            $fh = fopen($cover, 'rb');
+            $stream = new \Slim\Http\Stream($fh); // create a stream instance for the response body
+            return $response->withStatus(200)
+                ->withHeader('Content-Type', 'image/jpeg;base64')
+                ->withHeader('Content-Transfer-Encoding', 'binary')
+                ->withHeader('Content-Length', filesize($cover))
+                ->withBody($stream); // all stream contents will be sent to the response
+        } else {
+            return $response->withStatus(404)->write('No cover');
+        }
+    });
+
+    /**
+     * Return the selected file for the book with ID.
+     */
+    $this->get('/titles/{id}/format/{format}/', function(Psr\Http\Message\ServerRequestInterface $request, $response, $args) {
+        $id = $args['id'];
+        $format = $args['format'];
+        $this->logger->debug('/opds/titles/file downloading '.$format);
+        // parameter checking
+        if (!is_numeric($id)) {
+            $this->logger->warn('book: invalid title id ' . $id);
+            return $response->withStatus(400)->write('Bad parameter');
+        }
+        // TODO check file parameter?
+
+        $lang = $this->l10n->user_lang || 'en';
+        $details = $this->calibre->titleDetails($lang, $id);
+        if (is_null($details)) {
+            $this->logger->warn("book: no book found for " . $id);
+            return $response->withStatus(404);
+        }
+        // for people trying to circumvent filtering by direct access
+        if (title_forbidden($this->config[\BicBucStriim\AppConstants::LOGIN_REQUIRED], $this->user, $details)) {
+            $this->logger->warn("book: requested book not allowed for user: " . $id);
+            return $response->withStatus(403);
+        }
+
+        $real_bookpath = $this->calibre->titleFileByFormat($id, $format);
+        $contentType = Utilities::titleMimeType($real_bookpath);
+        if (!is_null($this->user))
+            $user = $this->username;
+        else
+            $user = '<unauthenticated user>';
+        $metadata_update = $this->config[\BicBucStriim\AppConstants::METADATA_UPDATE];
+        $this->logger->info("book download by $user for $real_bookpath  with metadata update = $metadata_update");
+        if ($contentType == Utilities::MIME_EPUB && $metadata_update) {
+            if ($details['book']->has_cover == 1)
+                $cover = $this->calibre->titleCover($id);
+            else
+                $cover = null;
+            // If an EPUB update the metadata
+            $mdep = new MetadataEpub($real_bookpath);
+            $mdep->updateMetadata($details, $cover);
+            $bookpath = $mdep->getUpdatedFile();
+        } else {
+            $bookpath = $real_bookpath;
+        }
+        $this->logger->debug("book(e): file " . $bookpath);
+        $this->logger->debug("book(e): type " . $contentType);
+        $booksize = filesize($bookpath);
+        $this->logger->debug("book(e): size " . $booksize);
+        $fh = fopen($bookpath, 'rb');
+        $stream = new \Slim\Http\Stream($fh); // create a stream instance for the response body
+        return $response
+            ->withHeader('Content-Type', 'application/force-download')
+            ->withHeader('Content-Type', 'application/octet-stream')
+            ->withHeader('Content-Type', 'application/download')
+            ->withHeader('Content-Description', 'File Transfer')
+            ->withHeader('Content-Type', $contentType)
+            ->withHeader('Content-Length', $booksize)
+            ->withHeader('Content-Transfer-Encoding', 'binary')
+            ->withHeader('Content-Disposition', 'attachment; filename="' . basename($real_bookpath) . '"')
+            // TODO no caching for book files?
+            ->withHeader('Expires', '0')
+            ->withHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->withHeader('Pragma', 'public')
+            ->withBody($stream); // all stream contents will be sent to the response
+    });
+
 });

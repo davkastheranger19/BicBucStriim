@@ -2,8 +2,6 @@
 
 namespace Tests\Functional;
 
-require 'src/BicBucStriim/AppConstants.php';
-
 use BicBucStriim\AppConstants;
 
 class ConfigTest extends BaseTestCase
@@ -57,11 +55,11 @@ class ConfigTest extends BaseTestCase
         $answer = json_decode($bd, true);
         $this->assertEmpty($answer[AppConstants::CALIBRE_DIR], "calibre dir should be empty, initially");
 
-        $response = $this->runApp('PUT', '/admin/configuration', array(AppConstants::CALIBRE_DIR => 'tests/worklib/lib2'));
+        $response = $this->runApp('PUT', '/admin/configuration', array(AppConstants::CALIBRE_DIR => self::CALIBRE));
         $bd = (string)$response->getBody();
         $this->assertEquals(200, $response->getStatusCode());
         $answer = json_decode($bd, true);
-        $this->assertEquals('tests/worklib/lib2', $answer[AppConstants::CALIBRE_DIR], "calibre dir should be modified");
+        $this->assertEquals(self::CALIBRE, $answer[AppConstants::CALIBRE_DIR], "calibre dir should be modified");
 
         $response = $this->runApp('PUT', '/admin/configuration', array(AppConstants::CALIBRE_DIR => 'tests/worklib/bla'));
         $bd = (string)$response->getBody();

@@ -43,20 +43,22 @@ class BicBucStriim {
 	 * We open it first as PDO, because we need that for the 
 	 * authentication library, then we initialize RedBean.
 	 *
-	 * @param string  	dataPath 	Path to BBS DB, default = data/data.db
-	 * @param boolean	freeze 		if true the DB schema is fixed, 
+	 * @param string  	$dataPath 	Path to BBS DB, default = data/data.db
+     * @param string    $publicPath Path to the public folder where the thumbnails are stored
+	 * @param boolean	$freeze 	if true the DB schema is fixed,
 	 * 								else RedBeanPHP adapt the schema
 	 * 								default = true
 	 */
-	function __construct($dataPath='data/data.db', $freeze=true) {
+	function __construct($dataPath='data/data.db', $publicPath='public', $freeze=true) {
 		$rp = realpath($dataPath);
+		$rpp = realpath($publicPath);
 		$this->data_dir = dirname($dataPath);
-		$this->thumb_dir = $this->data_dir.'/titles';
+		$this->thumb_dir = $rpp.'/thumbnails/titles';
 		if (!file_exists($this->thumb_dir))
-			mkdir($this->thumb_dir);
-    	$this->authors_dir = $this->data_dir . '/authors';
+			mkdir($this->thumb_dir, 0777, true);
+    	$this->authors_dir = $rpp . '/thumbnails/authors';
     	if (!file_exists($this->authors_dir))
-			mkdir($this->authors_dir);	
+			mkdir($this->authors_dir, 0777, true);
 		if (file_exists($rp) && is_writeable($rp)) {
 			$this->mydb = new PDO('sqlite:'.$rp, NULL, NULL, array());
 			$this->mydb->setAttribute(1002, 'SET NAMES utf8');
@@ -442,7 +444,7 @@ class BicBucStriim {
 		else
 			$created = $this->thumbnailStuffed($file, $png,  self::THUMB_RES, self::THUMB_RES, $fname);
 
-		$artefact = $calibreThing->getAuthorThumbnail();
+		$artefact = $this->getFirstArtefact($calibreThing);
 		if (is_null($artefact)) {
 			$artefact = R::dispense('artefact');
 			$artefact->atype = DataConstants::AUTHOR_THUMBNAIL_ARTEFACT;

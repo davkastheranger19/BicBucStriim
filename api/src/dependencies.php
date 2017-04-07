@@ -28,11 +28,12 @@ $container['bbs'] = function ($c) {
     $settings = $c->get('settings')['bbs'];
     $logger = $c->get('logger');
     $dbd = $settings['dataDb'];
-    $logger->debug('using bbs db '.$dbd);
-    $bbs = new BicBucStriim($dbd, true);
+    $public = $settings['public'];
+    $logger->debug("using bbs db $dbd and public path $public");
+    $bbs = new BicBucStriim($dbd, $public, true);
     if (!$bbs->dbOk()) {
-        $bbs->createDataDb($settings['dataDb']);
-        $bbs = new BicBucStriim($settings['dataDb'], true);
+        $bbs->createDataDb($dbd);
+        $bbs = new BicBucStriim($dbd, $public,true);
     }
     return $bbs;
 };

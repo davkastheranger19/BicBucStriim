@@ -6,27 +6,42 @@ use BicBucStriim\BicBucStriim;
 use RedBeanPHP\R;
 use BicBucStriim\DataConstants;
 
+/**
+ * RedBean caches some database information between tests, despite nuking and closing. To avoid this we run the tests
+ * in separate processes.
+ *
+ * NOTE: Debugging the test is not possible with these annotations! Switch them off, if debugging.
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
 
     const SCHEMA = __DIR__ . '/../../data/schema.sql';
-    const TESTSCHEMA = __DIR__ . '/../data/schema.sql';
     const DB2 = __DIR__ . '/../fixtures/data2.db';
-
-    const DATA = __DIR__ .'/../data';
-    const DATADB = __DIR__ . '/../data/data.db';
-
     const AUTHOR1 = __DIR__ . '/../fixtures/author1.jpg';
-    
+    const PUBLICS = __DIR__ . '/../../public';
+
+    const WORK = __DIR__ . '/../twork';
+    const PUBLICP = __DIR__ . '/../twork/public';
+    const THUMB = __DIR__ .'/../twork/public/thumbnails';
+    const THUMBA = __DIR__ .'/../twork/public/thumbnails/authors';
+    const THUMBT = __DIR__ .'/../twork/public/thumbnails/titles';
+    const DATA = __DIR__ . '/../twork/data';
+    const TESTSCHEMA = __DIR__ . '/../twork/data/schema.sql';
+    const DATADB = __DIR__ . '/../twork/data/data.db';
+
     var $bbs;
 
     function setUp() {
-        if (file_exists(self::DATA))
-            system("rm -rf ".self::DATA);
-        mkdir(self::DATA);
-        chmod(self::DATA,0777);
+        if (file_exists(self::WORK))
+            system("rm -rf ".self::WORK);
+        mkdir(self::DATA, 0777, true);
         copy(self::DB2, self::DATADB);
+        chmod(self::DATADB, 0777);
         copy(self::SCHEMA, self::TESTSCHEMA);
-        $this->bbs = new BicBucStriim(self::DATADB,false);
+        system("cp -r ".self::PUBLICS." ".self::WORK);
+        $this->bbs = new BicBucStriim(self::DATADB,self::PUBLICP, true);
     }
 
     function tearDown() {
@@ -34,21 +49,21 @@ class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
         R::nuke();
         R::close();
         $this->bbs = NULL;
-        system("rm -rf ".self::DATA);
+        system("rm -rf ".self::WORK);
     }
 
     function testDbOk() {
         $this->assertTrue($this->bbs->dbOk());
-        $this->bbs = new BicBucStriim(self::DATA.'/nodata.db');
+        $this->bbs = new BicBucStriim(self::DATA.'/nodata.db',self::PUBLICP);
         $this->assertFalse($this->bbs->dbOk());
     }
 
     function testCreateDb() {
-        $this->bbs = new BicBucStriim(self::DATA.'/nodata.db');
+        $this->bbs = new BicBucStriim(self::DATA.'/nodata.db', self::PUBLICP);
         $this->assertFalse($this->bbs->dbOk());
         $this->bbs->createDataDB(self::DATA.'/newdata.db');
         $this->assertTrue(file_exists(self::DATA.'/newdata.db'));
-        $this->bbs = new BicBucStriim(self::DATA.'/newdata.db');
+        $this->bbs = new BicBucStriim(self::DATA.'/newdata.db', self::PUBLICP);
         $this->assertTrue($this->bbs->dbOk());
     }
 
@@ -216,7 +231,7 @@ class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
 
     function testEditAuthorThumbnail() {
         $this->assertTrue($this->bbs->editAuthorThumbnail(1, 'Author Name', true, self::AUTHOR1, 'image/jpeg'));
-        $this->assertTrue(file_exists(self::DATA.'/authors/author_1_thm.png'));
+        $this->assertTrue(file_exists(self::THUMBA.'/author_1_thm.png'));
         $result2 = $this->bbs->getCalibreThing(DataConstants::CALIBRE_AUTHOR_TYPE, 1);
         $this->assertEquals('Author Name', $result2->cname);
         $this->assertEquals(1, $result2->refctr);
@@ -225,7 +240,7 @@ class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
         $result = $artefacts[1];
         $this->assertNotNull($result);
         $this->assertEquals(DataConstants::AUTHOR_THUMBNAIL_ARTEFACT, $result->atype);
-        $this->assertEquals(self::DATA.'/authors/author_1_thm.png', $result->url);
+        $this->assertEquals(realpath(self::THUMBA.'/author_1_thm.png'), $result->url);
     }
 
     function testGetAuthorThumbnail() {
@@ -234,7 +249,7 @@ class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
         $result = $this->bbs->getAuthorThumbnail(1);
         $this->assertNotNull($result);
         $this->assertEquals(DataConstants::AUTHOR_THUMBNAIL_ARTEFACT, $result->atype);
-        $this->assertEquals(self::DATA.'/authors/author_1_thm.png', $result->url);
+        $this->assertEquals(realpath(self::THUMBA.'/author_1_thm.png'), $result->url);
         $result = $this->bbs->getAuthorThumbnail(2);
         $this->assertNotNull($result);
     }
@@ -243,7 +258,7 @@ class TestOfBicBucStriim extends \PHPUnit\Framework\TestCase {
         $this->assertTrue($this->bbs->editAuthorThumbnail(1, 'Author Name', true, self::AUTHOR1, 'image/jpeg'));
         $this->assertNotNull($this->bbs->getAuthorThumbnail(1));
         $this->assertTrue($this->bbs->deleteAuthorThumbnail(1));
-        $this->assertFalse(file_exists(self::DATA.'/authors/author_1_thm.png'));
+        $this->assertFalse(file_exists(self::THUMBA.'/author_1_thm.png'));
         $this->assertNull($this->bbs->getAuthorThumbnail(1));
         $this->assertEquals(0, R::count('artefact'));
         $this->assertEquals(0, R::count('calibrething'));

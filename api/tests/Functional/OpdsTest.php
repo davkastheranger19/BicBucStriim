@@ -3,6 +3,7 @@
 namespace Tests\Functional;
 
 use BicBucStriim\AppConstants;
+use BicBucStriim\Utilities;
 
 class OpdsTest extends BaseTestCase
 {
@@ -13,7 +14,7 @@ class OpdsTest extends BaseTestCase
         $bd = (string)$response->getBody();
         $answer = json_decode($bd, true);
         $this->token = $answer['token'];
-        $this->runApp('PUT', '/admin/configuration', array(AppConstants::CALIBRE_DIR => 'tests/worklib/lib2'));
+        $this->runApp('PUT', '/admin/configuration', array(AppConstants::CALIBRE_DIR => self::CALIBRE));
     }
 
 
@@ -283,5 +284,32 @@ class OpdsTest extends BaseTestCase
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertContains('Bad parameter', $content);
     }
+
+    /**
+     * Test that the title download route returns a book file
+     */
+    public function testBook()
+    {
+        $response = $this->runAppWithAdmin('GET', '/opds/titles/4/format/EPUB/');
+        $content = (string)$response->getBody();
+        //print_r($content);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(10175, $response->getHeader('Content-Length')[0]);
+        $this->assertEquals(Utilities::MIME_EPUB, $response->getHeader('Content-Type')[0]);
+    }
+
+    /**
+     * Test that the cover download route returns an image
+     */
+    public function testCover()
+    {
+        $response = $this->runAppWithAdmin('GET', '/opds/titles/4/cover/');
+        $content = (string)$response->getBody();
+        //print_r($content);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(201515, $response->getHeader('Content-Length')[0]);
+        $this->assertEquals('image/jpeg;base64', $response->getHeader('Content-Type')[0]);
+    }
+
 
 }

@@ -1,18 +1,43 @@
 <?php
 
 /**
- * Check for all books if thumbnails are available
+ * Check for all books if thumbnails are available, if not try to create them
  * @param array                         $books book records
  * @param \BicBucStriim\BicBucStriim    $bbs
+ * @param \BicBucStriim\Calibre         $calibre
+ * @param bool                          $clipped
  * @return array
  */
-function checkThumbnailOpds($books, $bbs)
+function checkThumbnailOpds($books, $bbs, $calibre, $clipped)
 {
-    $checkThumbnailOpds = function ($record) use ($bbs) {
-        $record['book']->thumbnail = $bbs->isTitleThumbnailAvailable($record['book']->id);
+    $checkThumbnailOpds = function ($record) use ($bbs, $calibre, $clipped) {
+        $record['book']->thumbnail = checkAndCreateThumbnail($record['book']->id, $bbs, $calibre, $clipped);
         return $record;
     };
     return array_map($checkThumbnailOpds, $books);
+}
+
+/**
+ * Check if a title thumbnail exists, if not try to create it.
+ * @param int $id   book id
+ * @param \BicBucStriim\BicBucStriim $bbs
+ * @param \BicBucStriim\Calibre $calibre
+ * @param bool $clipped    should the thumbnail be clipped?
+ * @return bool true if thumbnail exists, else false
+ */
+function checkAndCreateThumbnail($id, \BicBucStriim\BicBucStriim $bbs, \BicBucStriim\Calibre $calibre, $clipped) {
+    $thum_exists = $bbs->isTitleThumbnailAvailable($id);
+    if ($thum_exists) {
+        return true;
+    } else {
+        $cover_path = $calibre->titleCover($id);
+        if (is_null($cover_path)) {
+            return false;
+        }  else {
+            $thumb_path = $bbs->titleThumbnail($id, $cover_path, $clipped);
+            return is_null($thumb_path);
+        }
+    }
 }
 
 /**

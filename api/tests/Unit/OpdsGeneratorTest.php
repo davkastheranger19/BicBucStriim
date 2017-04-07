@@ -19,24 +19,32 @@ use XMLReader;
 class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
 {
     const OPDS_RNG = __DIR__ . '/../fixtures/opds_catalog_1_1.rng';
-    const DATA = __DIR__ . '/../data';
     const DB2 = __DIR__ . '/../fixtures/data2.db';
     const CDB2 = __DIR__ . '/../fixtures/lib2/metadata.db';
-    const DATADB = __DIR__ . '/../data/data.db';
     const TOOLS = __DIR__ . '/../tools';
+    const PUBLICS = __DIR__ . '/../../public';
+
+
+    const WORK = __DIR__ . '/../twork';
+    const PUBLICP = __DIR__ . '/../twork/public';
+    const THUMB = __DIR__ .'/../twork/public/thumbnails';
+    const THUMBA = __DIR__ .'/../twork/public/thumbnails/authors';
+    const THUMBT = __DIR__ .'/../twork/public/thumbnails/titles';
+    const DATA = __DIR__ . '/../twork/data';
+    const TESTSCHEMA = __DIR__ . '/../twork/data/schema.sql';
+    const DATADB = __DIR__ . '/../twork/data/data.db';
 
     var $bbs;
     var $gen;
 
     function setUp()
     {
-        if (file_exists(self::DATA))
-            system("rm -rf " . self::DATA);
-        //print_r(getcwd());
-        mkdir(self::DATA);
-        chmod(self::DATA, 0777);
+        if (file_exists(self::WORK))
+            system("rm -rf ".self::WORK);
+        mkdir(self::DATA, 0777, true);
         copy(self::DB2, self::DATADB);
-        $this->bbs = new BicBucStriim(self::DATADB);
+        system("cp -r ".self::PUBLICS." ".self::WORK);
+        $this->bbs = new BicBucStriim(self::DATADB,self::PUBLICP, true);
         $this->calibre = new Calibre(self::CDB2);
         $l10n = new L10n('en');
         $this->gen = new OpdsGenerator('/bbs', '0.9.0',
@@ -49,7 +57,7 @@ class TestOfOpdsGenerator extends \PHPUnit\Framework\TestCase
     {
         $this->calibre = NULL;
         $this->bbs = NULL;
-        system("rm -rf " . self::DATA);
+        system("rm -rf ".self::WORK);
     }
 
     # Validation helper: validate relaxng

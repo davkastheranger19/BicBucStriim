@@ -26,27 +26,29 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected $environment;
     protected $token;
 
-    const CALIBRE = __DIR__ . '/../fixtures/lib2';
+    const LIB2 = __DIR__ . '/../fixtures/lib2';
     const DB2 = __DIR__ . '/../fixtures/data2.db';
+    const PUBLICS = __DIR__ . '/../../public';
 
-    const DATA = __DIR__ . '/../data';
-    const DATADB = __DIR__ . '/../data/data.db';
-
+    const WORK = __DIR__ . '/../twork';
+    const DATA = __DIR__ . '/../twork/data';
+    const DATADB = __DIR__ . '/../twork/data/data.db';
+    const PUBLICP = __DIR__ . '/../twork/public';
+    const CALIBRE = __DIR__ . '/../twork/lib2';
 
     function setUp() {
-        if (file_exists(self::DATA))
-            system("rm -rf ".self::DATA);
-        //print_r(getcwd().'\n');
-        //print_r(self::DATA);
-        mkdir(self::DATA);
-        chmod(self::DATA,0777);
+        if (file_exists(self::WORK))
+            system("rm -rf ".self::WORK);
+        mkdir(self::DATA, 0777, true);
         copy(self::DB2, self::DATADB);
+        system("cp -r ".self::PUBLICS." ".self::WORK);
+        system("cp -r ".self::LIB2." ".self::WORK);
     }
 
     function tearDown() {
         R::nuke();
         R::close();
-        system("rm -rf ".self::DATA);
+        system("rm -rf ".self::WORK);
     }
 
     /**
@@ -118,6 +120,7 @@ class BaseTestCase extends \PHPUnit\Framework\TestCase
         // Use the application settings
         $settings = require __DIR__ . '/../../src/settings.php';
         $settings['settings']['bbs']['dataDb'] = self::DATADB;
+        $settings['settings']['bbs']['public'] = self::PUBLICP;
 
         // Instantiate the application
         $app = new App($settings);
