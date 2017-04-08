@@ -51,6 +51,7 @@ class AppConstants {
 # field for time-sorting of books
     const TITLE_TIME_SORT = 'title_time_sort';
 # Possible values for the above field
+    const TITLE_ALPHA_SORT = 'alphabetic';
     const TITLE_TIME_SORT_TIMESTAMP = 'timestamp';
     const TITLE_TIME_SORT_PUBDATE = 'pubdate';
     const TITLE_TIME_SORT_LASTMODIFIED = 'lastmodified';

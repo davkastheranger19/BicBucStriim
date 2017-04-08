@@ -8,6 +8,23 @@
  * @param bool                          $clipped
  * @return array
  */
+function checkThumbnail($books, $bbs, $calibre, $clipped)
+{
+    $checkThumbnail = function ($book) use ($bbs, $calibre, $clipped) {
+        $book->thumbnail = checkAndCreateThumbnail($book->id, $bbs, $calibre, $clipped);
+        return $book;
+    };
+    return array_map($checkThumbnail, $books);
+}
+
+/**
+ * Check for all books if thumbnails are available, if not try to create them
+ * @param array                         $books book records
+ * @param \BicBucStriim\BicBucStriim    $bbs
+ * @param \BicBucStriim\Calibre         $calibre
+ * @param bool                          $clipped
+ * @return array
+ */
 function checkThumbnailOpds($books, $bbs, $calibre, $clipped)
 {
     $checkThumbnailOpds = function ($record) use ($bbs, $calibre, $clipped) {
@@ -105,7 +122,19 @@ function getLastSearchPage($tl)
     return $lastPage;
 }
 
-
+/**
+ * Get a query parameter's value, or a defalut value if not set
+ * @param array $params query parameters
+ * @param string $name parameter name
+ * @param mixed $default default value
+ * @return mixed
+ */
+function getQueryParam($params, $name, $default) {
+    if (array_key_exists($name, $params))
+        return $params[$name];
+    else
+        return $default;
+}
 /**
  * Initialize the OPDS generator
  * @param $container
