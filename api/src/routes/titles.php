@@ -109,7 +109,7 @@ $app->group('/titles', function() {
         // Render the result
         $manager = new Manager();
         // TODO add language, langcodes
-        $manager->parseIncludes('series,tags,formats,identifiers');
+        $manager->parseIncludes('series,tags,formats,identifiers,comment');
         $manager->setSerializer(new JsonApiSerializer());
         $resource = new Item($details, new \BicBucStriim\BookTransformer, 'books');
         $data = $manager->createData($resource)->toArray();

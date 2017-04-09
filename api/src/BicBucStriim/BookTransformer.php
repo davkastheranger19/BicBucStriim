@@ -21,7 +21,8 @@ class BookTransformer extends TransformerAbstract
         'series',
         'tags',
         'formats',
-        'identifiers'
+        'identifiers',
+        'comment'
     ];
 
     /**
@@ -114,4 +115,15 @@ class BookTransformer extends TransformerAbstract
         return $this->collection($identifiers, new IdentifierTransformer, 'identifiers');
     }
 
+    /**
+     * Include series information, there is at most one series per book
+     * @param $details
+     * @return \League\Fractal\Resource\Item|null
+     */
+    public function includeComment($details) {
+        $comment = $details['comment'];
+        if (empty($comment))
+            return null;
+        return $this->item($comment, new commentTransformer, 'comment');
+    }
 }

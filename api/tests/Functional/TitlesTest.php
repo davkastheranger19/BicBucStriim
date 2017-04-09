@@ -160,7 +160,7 @@ class TitlesTest extends BaseTestCase
         //print_r($answer);
         $this->assertEquals(200, $response->getStatusCode());
         $book = $answer['data'];
-        // tags
+        // formats
         $this->assertEquals(1, sizeof($book['relationships']['formats']['data']));
         $tag = $book['relationships']['formats']['data'][0];
         $this->assertEquals('formats', $tag['type']);
@@ -179,7 +179,7 @@ class TitlesTest extends BaseTestCase
         //print_r($answer);
         $this->assertEquals(200, $response->getStatusCode());
         $book = $answer['data'];
-        // tags
+        // identifiers
         $this->assertEquals(3, sizeof($book['relationships']['identifiers']['data']));
         $tag = $book['relationships']['identifiers']['data'][0];
         $this->assertEquals('identifiers', $tag['type']);
@@ -190,6 +190,28 @@ class TitlesTest extends BaseTestCase
         $this->assertEquals('neuesleben4', $included['attributes']['value']);
     }
 
+    public function testTitleComment() {
+        $response = $this->runApp('GET', '/titles/6/');
+        $content = (string)$response->getBody();
+        //print_r($content);
+        $answer = json_decode($content, true);
+        //print_r($answer);
+        $this->assertEquals(200, $response->getStatusCode());
+        $book = $answer['data'];
+        // comment
+        $this->assertArrayNotHasKey('comment', $book['relationships']);
+        // TODO add test data for comments
+        /*
+        $this->assertEquals(3, sizeof($book['relationships']['comment']['data']));
+        $tag = $book['relationships']['comment']['data'][0];
+        $this->assertEquals('comment', $tag['type']);
+        $included = $answer['included'][3];
+        $this->assertEquals('comment', $included['type']);
+        $this->assertEquals(6, $included['id']);
+        $this->assertEquals('test4', $included['attributes']['type']);
+        $this->assertEquals('', $included['attributes']['text']);
+        */
+    }
     /**
      * Test that the titles cover route returns an OPDS catalog
      */
