@@ -11,6 +11,7 @@ composer.phar
 *.iml
 node_modules
 build
+api/build.log
 api/vendor
 api/logs
 api/tests/work
