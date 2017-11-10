@@ -131,7 +131,7 @@ $app->group('/titles', function() {
         }
         $book = $this->calibre->title($id);
         if (is_null($book)) {
-            $this->logger->debug("cover: book not found: " + $id);
+            $this->logger->debug('cover: book not found: ' . $id);
             return $response->withStatus(404)->write('Book for cover not found');
         }
         if ($book->has_cover) {
@@ -161,7 +161,7 @@ $app->group('/titles', function() {
         }
         $book = $this->calibre->title($id);
         if (is_null($book)) {
-            $this->logger->debug("thumbnail: book not found: " + $id);
+            $this->logger->debug('thumbnail: book not found: ' . $id);
             return $response->withStatus(404)->write('Book not found');
         }
         if ($book->has_cover) {
