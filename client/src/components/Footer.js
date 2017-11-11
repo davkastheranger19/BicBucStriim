@@ -1,14 +1,16 @@
-import React from 'react';
+import React from 'react'
 import {Navbar, Nav, NavItem,  FormGroup, FormControl, Button} from 'react-bootstrap'
+import {withRouter} from 'react-router-dom'
 
 import {Locs} from '../l10n'
 
 
-class Footer extends React.Component {
-	constructor() {
-	    super();
+class Footer1 extends React.Component {
+	constructor(props) {
+	    super(props);
 	    this.locs = Locs();
 	    this.state = { selectedIndex: 0 }
+        props.history.push('/')
   	}	
 
   	select = (index,event) => {
@@ -23,7 +25,7 @@ class Footer extends React.Component {
   			default: route = '/'; break;
 
   		}
-  		this.context.history.push(route)
+  		this.props.history.push(route)
   	}
 
 	render() {
@@ -44,10 +46,5 @@ class Footer extends React.Component {
 	}
 }
 
-Footer.contextTypes = {
-  history: React.PropTypes.shape({
-    push: React.PropTypes.func.isRequired
-  })
-}
-
+const Footer = withRouter(Footer1)
 export default Footer;
