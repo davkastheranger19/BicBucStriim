@@ -1,0 +1,3 @@
+export const TITLES_DL30 = 'TITLES_DL30'
+export const TITLES_DL30_SUCCESS = 'TITLES_DL30_SUCCESS'
+export const TITLES_ERROR = 'TITLES_ERROR'
