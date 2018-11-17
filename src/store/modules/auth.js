@@ -32,6 +32,7 @@ const actions = {
       .catch(err => {
         commit(AUTH_ERROR, err)
         localStorage.removeItem('user-token')
+        this.apolloProvider.clearStore()
         reject(err)
       })
     })
