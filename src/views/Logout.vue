@@ -12,26 +12,26 @@
 </style>
 
 <script>
-    import {AUTH_LOGOUT} from '../store/actions/auth'
+  import {AUTH_LOGOUT} from '../store/actions/auth'
 
-    export default {
-        name: 'Logout',
-        data() {
-            return {
-                form: {
-                    username: '',
-                    password: '',
-                },
-                show: true
-            }
+  export default {
+    name: 'Logout',
+    data() {
+      return {
+        form: {
+          username: '',
+          password: '',
         },
-        methods: {
-            onEnter: function (evt) {
-                evt.preventDefault();
-                this.$store.dispatch(AUTH_LOGOUT, {}).then(() => {
-                    this.$router.push('/')
-                })
-            }
-        },
-    }
+        show: true
+      }
+    },
+    methods: {
+      onEnter: function (evt) {
+        evt.preventDefault();
+        this.$store.dispatch(AUTH_LOGOUT, {}).then(() => {
+          this.$router.push('/')
+        })
+      }
+    },
+  }
 </script>

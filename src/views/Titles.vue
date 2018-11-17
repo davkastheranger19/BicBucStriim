@@ -1,6 +1,6 @@
 <template>
   <div class="titles">
-    <h1>{{ $t('titles') }} </h1>
+    <h1>{{ $t('titles') }}</h1>
     <BookList :titles="titles" />
   </div>
 </template>
@@ -16,7 +16,7 @@
       BookList
     },
     apollo: {
-      titles: gql`{ titles(index: 0, lang: "de", length: 30, search: null) {id, sort, authorSort, addInfo} }`,
+      titles: gql`{ titles(index: 0, lang: "de", length: 30, search: null) {id, sort, authorSort, addInfo, thumbnail} }`,
     },
     data() {
       return {

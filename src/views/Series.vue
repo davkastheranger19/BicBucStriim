@@ -7,9 +7,8 @@
 
 <script>
 
-    export default {
-        name: 'Series',
-        components: {
-        }
-    }
+  export default {
+    name: 'Series',
+    components: {}
+  }
 </script>

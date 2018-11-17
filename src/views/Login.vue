@@ -1,11 +1,11 @@
 <template>
   <div class="login">
-    <b-form 
-      @submit="onSubmit" 
+    <b-form
+      @submit="onSubmit"
       v-if="show"
     >
       <h1>{{ $t('login') }}</h1>
-      <b-form-group 
+      <b-form-group
         id="username"
         label-for="usernameInput"
       >
@@ -17,11 +17,11 @@
           :placeholder="$t('admin_username')"
         />
       </b-form-group>
-      <b-form-group 
+      <b-form-group
         id="password"
         label-for="passwordInput"
       >
-        <b-form-input 
+        <b-form-input
           id="passwordInput"
           type="password"
           v-model="form.password"
@@ -29,10 +29,11 @@
           :placeholder="$t('admin_userpw')"
         />
       </b-form-group>
-      <b-button 
-        type="submit" 
+      <b-button
+        type="submit"
         variant="primary"
-      >{{ $t('login') }}</b-button>
+      >{{ $t('login') }}
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -45,27 +46,27 @@
 </style>
 
 <script>
-    import {AUTH_REQUEST} from '../store/actions/auth'
+  import {AUTH_REQUEST} from '../store/actions/auth'
 
-    export default {
-        name: 'Login',
-        data() {
-            return {
-                form: {
-                    username: '',
-                    password: '',
-                },
-                show: true
-            }
+  export default {
+    name: 'Login',
+    data() {
+      return {
+        form: {
+          username: '',
+          password: '',
         },
-        methods: {
-            onSubmit: function (evt) {
-                evt.preventDefault();
-                const {username, password} = this.form
-                this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
-                    this.$router.push('/')
-                })
-            }
-        },
-    }
+        show: true
+      }
+    },
+    methods: {
+      onSubmit: function (evt) {
+        evt.preventDefault();
+        const {username, password} = this.form
+        this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
+          this.$router.push('/')
+        })
+      }
+    },
+  }
 </script>
