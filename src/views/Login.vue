@@ -13,6 +13,7 @@
           id="usernameInput"
           type="text"
           v-model="form.username"
+          autocomplete="username"
           required
           :placeholder="$t('admin_username')"
         />
@@ -25,6 +26,7 @@
           id="passwordInput"
           type="password"
           v-model="form.password"
+          autocomplete="current-password"
           required
           :placeholder="$t('admin_userpw')"
         />

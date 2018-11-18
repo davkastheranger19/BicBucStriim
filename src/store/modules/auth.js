@@ -1,8 +1,7 @@
 /* eslint-disable promise/param-names */
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
-import { USER_REQUEST } from '../actions/user'
-import apiCall from '../../utils/api'
 import axios from 'axios'
+import $apollo from "apollo-client/ApolloClient";
 
 const state = { token: localStorage.getItem('user-token') || '', status: '', hasLoadedOnce: false }
 
@@ -32,7 +31,7 @@ const actions = {
       .catch(err => {
         commit(AUTH_ERROR, err)
         localStorage.removeItem('user-token')
-        this.apolloProvider.clearStore()
+        async () => $apollo.clearStore()
         reject(err)
       })
     })
@@ -41,7 +40,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       commit(AUTH_LOGOUT)
       localStorage.removeItem('user-token')
-        axios.defaults.headers.common['Authorization'] = ''
+      axios.defaults.headers.common['Authorization'] = ''
+      async () => $apollo.clearStore()
       resolve()
     })
   }
