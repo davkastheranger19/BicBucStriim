@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "genl10n": "node res/scripts/genl10n.js res/l10n/messages.yml src/lang"
+    "genl10n": "node res/scripts/genl10n.js res/l10n/messages.yml src/lang",
+    "doc:dev": "vuepress dev doc",
+    "doc:build": "vuepress build doc"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.8",
@@ -39,7 +41,8 @@
     "eslint-plugin-vue": "^5.0.0-0",
     "read-yaml": "^1.1.0",
     "style-loader": "^0.23.1",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.17",
+    "vuepress": "^0.14.5"
   },
   "eslintConfig": {
     "root": true,
