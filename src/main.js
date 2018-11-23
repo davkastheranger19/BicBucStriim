@@ -8,34 +8,10 @@ import {AUTH_LOGOUT} from '@/store/actions/auth'
 import en from '@/lang/en.json'
 import de from '@/lang/de.json'
 
-import ApolloClient from "apollo-client"
-import {createHttpLink} from 'apollo-link-http';
-import {setContext} from 'apollo-link-context';
-import {InMemoryCache} from 'apollo-cache-inmemory';
-
-const httpLink = createHttpLink({
-  uri: 'api/graphql',
-});
-
-const authLink = setContext((_, {headers}) => {
-  // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('user-token');
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
-    }
-  }
-});
-
+import {apollo} from '@/utils/apollo'
 import VueApollo from "vue-apollo"
 const apolloProvider = new VueApollo({
-  defaultClient: new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
-    connectToDevTools: true,
-  }),
+  defaultClient: apollo,
   errorHandler ({ graphQLErrors, networkError }) {
     if (graphQLErrors)
       graphQLErrors.map(({ message, locations, path }) =>

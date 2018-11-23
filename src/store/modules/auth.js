@@ -1,5 +1,6 @@
 /* eslint-disable promise/param-names */
 import { AUTH_REQUEST, AUTH_ERROR, AUTH_SUCCESS, AUTH_LOGOUT } from '../actions/auth'
+import { STATUS_REQUEST } from '../actions/libstatus'
 import axios from 'axios'
 import $apollo from "apollo-client/ApolloClient";
 
@@ -25,7 +26,7 @@ const actions = {
           commit(AUTH_SUCCESS, resp)
           axios.defaults.headers.common['Authorization'] = resp.token
           localStorage.setItem('user-token', resp.data.token)
-          //dispatch(AUTH_SUCCESS)
+          dispatch(STATUS_REQUEST)
         resolve(resp)
       })
       .catch(err => {

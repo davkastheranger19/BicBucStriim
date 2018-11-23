@@ -41,7 +41,7 @@
             </b-nav-form>
 
             <b-nav-item
-              v-if="isAuthenticated"
+              v-if="isAuthenticated && isAdmin"
               :title="$t('admin_short')"
               to="/admin"
             ><font-awesome-icon icon="cog" /></b-nav-item>
@@ -82,7 +82,7 @@
             }
         },
         computed: {
-            ...mapGetters(['isAuthenticated']),
+            ...mapGetters(['isAuthenticated', 'isAdmin']),
         },
     }
 </script>
