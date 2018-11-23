@@ -28,6 +28,7 @@ import {Table} from 'bootstrap-vue/es/components';
 import {Card} from 'bootstrap-vue/es/components';
 import {Link} from 'bootstrap-vue/es/components';
 import {Tooltip} from 'bootstrap-vue/es/components';
+import {Alert} from 'bootstrap-vue/es/components';
 
 Vue.use(Layout)
 Vue.use(Link)
@@ -40,6 +41,7 @@ Vue.use(Form)
 Vue.use(Jumbotron)
 Vue.use(Button)
 Vue.use(Tooltip)
+Vue.use(Alert)
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faCog, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'

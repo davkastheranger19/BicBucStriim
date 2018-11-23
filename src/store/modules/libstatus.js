@@ -9,6 +9,7 @@ const state = {status: '', libStatus: {userName: '', userId: "-1", userRole: 'NO
 const getters = {
   getLibStatus: state => state.libStatus,
   isAdmin: state => state.libStatus.userRole === 'ADMIN',
+  isLibraryAvailable: state => state.libStatus.libraryDefined,
   isLibStatusLoaded: state => !!state.libStatus.userName,
 }
 
