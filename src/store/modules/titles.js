@@ -9,7 +9,7 @@ const getters = {
 }
 
 const actions = {
-    [TITLES_DL30]: ({commit, dispatch}) => {
+    [TITLES_DL30]: ({commit}) => {
         commit(TITLES_DL30)
         this.$apollo.provider.defaultClient.query({
             query: gql`

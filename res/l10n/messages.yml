@@ -1696,6 +1696,9 @@ relative_urls_expl:
   en: Switch this off, if your OPDS reader requires full URLs
   fr: Désactivez ceci, si votre lecteur OPDS requiert des URLs complètes
   pl: Wyłącz, jeśli twoja przeglądarka OPDS wymaga pełnych URLi
+reset:
+  de: Zurücksetzen
+  en: Reset
 save:
   hu: Mentés
   de: Speichern

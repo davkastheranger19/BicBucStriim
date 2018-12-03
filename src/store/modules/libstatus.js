@@ -28,7 +28,7 @@ const actions = {
       commit(STATUS_SUCCESS, resp)
     }).catch(resp => {
       commit(STATUS_ERROR)
-      // if resp is unauthorized, logout, to
+      // TODO if resp is unauthorized logout, else ...
       dispatch(AUTH_LOGOUT)
     })
   },

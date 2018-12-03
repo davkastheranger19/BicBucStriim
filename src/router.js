@@ -1,7 +1,10 @@
 import Vue from 'vue'
-import BootstrapVue from 'bootstrap-vue'
 import Router from 'vue-router'
+import '@/utils/bootstrap'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Home from './views/Home.vue'
+import Admin from './views/Admin.vue'
 import Login from './views/Login.vue'
 import Logout from './views/Logout.vue'
 import Titles from './views/Titles.vue'
@@ -14,34 +17,7 @@ import Series from './views/Series.vue'
 import SeriesDetails from './views/SeriesDetails.vue'
 import store from './store/index'
 
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-Vue.use(Router, BootstrapVue)
-
-import {Layout} from 'bootstrap-vue/es/components';
-import {Button, Form, Jumbotron} from 'bootstrap-vue/es/components';
-import {FormGroup} from 'bootstrap-vue/es/components';
-import {FormInput} from 'bootstrap-vue/es/components';
-import {Navbar} from 'bootstrap-vue/es/components';
-import {Table} from 'bootstrap-vue/es/components';
-import {Card} from 'bootstrap-vue/es/components';
-import {Link} from 'bootstrap-vue/es/components';
-import {Tooltip} from 'bootstrap-vue/es/components';
-import {Alert} from 'bootstrap-vue/es/components';
-
-Vue.use(Layout)
-Vue.use(Link)
-Vue.use(Card)
-Vue.use(Table)
-Vue.use(Navbar)
-Vue.use(FormInput)
-Vue.use(FormGroup)
-Vue.use(Form)
-Vue.use(Jumbotron)
-Vue.use(Button)
-Vue.use(Tooltip)
-Vue.use(Alert)
+Vue.use(Router)
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faCog, faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
@@ -66,6 +42,13 @@ const ifAuthenticated = (to, from, next) => {
   }
   next('/login')
 }
+const ifAdmin = (to, from, next) => {
+  if (store.getters.isAuthenticated && store.getters.isAdmin) {
+    next()
+    return
+  }
+  next('/login')
+}
 
 export default new Router({
   history,
@@ -75,6 +58,12 @@ export default new Router({
       name: 'home',
       component: Home,
       beforeEnter: ifAuthenticated,
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      beforeEnter: ifAdmin,
     },
     {
       path: 'titles/:id',

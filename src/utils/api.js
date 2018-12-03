@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const mocks = {
   'auth': { 'POST': { token: 'This-is-a-mocked-token' } },
   'user/me': { 'GET': { name: 'admin', role: '1' } }
