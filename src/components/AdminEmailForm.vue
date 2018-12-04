@@ -120,8 +120,8 @@
         mailForm: {
           mailBooks: [false],
           mailBooksOptions: [
-            {text: "$t('switch_yes')", value: true},
-            {text: "$t('switch_no')", value: false},
+            {text: this.$i18n.t('switch_yes'), value: true},
+            {text: this.$i18n.t('switch_no'), value: false},
           ],
           mailFrom: '',
           username: '',
@@ -130,9 +130,9 @@
           smtpPort: '',
           smtpEnc: [0],
           smtpEncOptions: [
-            {text: "$t('admin_smtpenc_none')", value: 0},
-            {text: "$t('admin_smtpenc_ssl')", value: 1},
-            {text: "$t('admin_smtpenc_tls')", value: 2},
+            {text: this.$i18n.t('admin_smtpenc_none'), value: 0},
+            {text: this.$i18n.t('admin_smtpenc_ssl'), value: 1},
+            {text: this.$i18n.t('admin_smtpenc_tls'), value: 2},
           ],
         },
         show: true
